@@ -146,6 +146,7 @@ function main_code(){
 
 	echo "----------------------------------------------------------"
 	echo "[i] Upgrade the Bitwarden application using bitwarden user"
+	su - bitwarden -c "$BW_DATA/bitwarden.sh updateself"
 	su - bitwarden -c "$BW_DATA/bitwarden.sh update"
 }
 
