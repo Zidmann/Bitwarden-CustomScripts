@@ -113,25 +113,25 @@ mkdir -p "$(dirname "$TMP_PATH")"
 # Elapsed time - begin date
 BEGIN_DATE=$(date +%s)
 
-##################################################################################
-# First console actions - Printing the header and the variables
-##################################################################################
 EXECUTE_EXIT_FUNCTION=1
-echo "" | tee -a "$LOG_PATH"
-echo "======================================================" | tee -a "$LOG_PATH"
-echo "======================================================" | tee -a "$LOG_PATH"
-echo "= SCRIPT TO UPGRADE THE SYSTEM                       =" | tee -a "$LOG_PATH"
-echo "======================================================" | tee -a "$LOG_PATH"
-echo "======================================================" | tee -a "$LOG_PATH"
 
-echo "Starting time : $(date)"   | tee -a "$LOG_PATH"
-echo "Version : $SCRIPT_VERSION" | tee -a "$LOG_PATH"
-echo ""                          | tee -a "$LOG_PATH"
-echo "LOG_PATH=$LOG_PATH"        | tee -a "$LOG_PATH"
-echo "TMP_PATH=$TMP_PATH"        | tee -a "$LOG_PATH"
-
+##################################################################################
+# 
 ##################################################################################
 function main_code(){
+	echo ""
+	echo "======================================================"
+	echo "======================================================"
+	echo "= SCRIPT TO UPGRADE THE SYSTEM                       ="
+	echo "======================================================"
+	echo "======================================================"
+
+	echo "Starting time : $(date)"
+	echo "Version : $SCRIPT_VERSION"
+	echo ""
+	echo "LOG_PATH=$LOG_PATH"
+	echo "TMP_PATH=$TMP_PATH"
+
 	echo "----------------------------------------------------------"
 	echo "[i] Updating the package lists"
 	apt-get update
