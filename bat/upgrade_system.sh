@@ -140,11 +140,20 @@ echo "LOG_PATH=$LOG_PATH"        | tee -a "$LOG_PATH"
 echo "TMP_PATH=$TMP_PATH"        | tee -a "$LOG_PATH"
 
 ##################################################################################
-echo "------------------------------------------------------" | tee -a "$LOG_PATH"
-
+echo "----------------------------------------------------------" | tee -a "$LOG_PATH"
+echo "[i] Updating the package lists"                             | tee -a "$LOG_PATH"
 execute_cmd "apt-get update"
+
+echo "----------------------------------------------------------" | tee -a "$LOG_PATH"
+echo "[i] Installing the last versions of the packages"           | tee -a "$LOG_PATH"
 execute_cmd "apt-get upgrade -y"
+
+echo "----------------------------------------------------------" | tee -a "$LOG_PATH"
+echo "[i] Removing the unused dependencies"                       | tee -a "$LOG_PATH"
 execute_cmd "apt-get autoremove -y"
+
+echo "----------------------------------------------------------" | tee -a "$LOG_PATH"
+echo "[i] Upgrade the Bitwarden application using bitwarden user" | tee -a "$LOG_PATH"
 execute_cmd "su - bitwarden -c \"$BW_DATA/bitwarden.sh update\""
 
 ##################################################################################
