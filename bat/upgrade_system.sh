@@ -113,15 +113,6 @@ mkdir -p "$(dirname "$TMP_PATH")"
 # Elapsed time - begin date
 BEGIN_DATE=$(date +%s)
 
-function execute_cmd(){
-	local CMD=$1
-	$CMD 1>"$TMP_PATH" 2>&1
-	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
-
-	cat "$TMP_PATH" | tee -a  "$LOG_PATH"
-	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
-}
-
 ##################################################################################
 # First console actions - Printing the header and the variables
 ##################################################################################
@@ -140,21 +131,25 @@ echo "LOG_PATH=$LOG_PATH"        | tee -a "$LOG_PATH"
 echo "TMP_PATH=$TMP_PATH"        | tee -a "$LOG_PATH"
 
 ##################################################################################
-echo "----------------------------------------------------------" | tee -a "$LOG_PATH"
-echo "[i] Updating the package lists"                             | tee -a "$LOG_PATH"
-execute_cmd "apt-get update"
+function main_code(){
+	echo "----------------------------------------------------------"
+	echo "[i] Updating the package lists"
+	apt-get update
 
-echo "----------------------------------------------------------" | tee -a "$LOG_PATH"
-echo "[i] Installing the last versions of the packages"           | tee -a "$LOG_PATH"
-execute_cmd "apt-get upgrade -y"
+	echo "----------------------------------------------------------"
+	echo "[i] Installing the last versions of the packages"
+	apt-get upgrade -y
 
-echo "----------------------------------------------------------" | tee -a "$LOG_PATH"
-echo "[i] Removing the unused dependencies"                       | tee -a "$LOG_PATH"
-execute_cmd "apt-get autoremove -y"
+	echo "----------------------------------------------------------"
+	echo "[i] Removing the unused dependencies"
+	apt-get autoremove -y
 
-echo "----------------------------------------------------------" | tee -a "$LOG_PATH"
-echo "[i] Upgrade the Bitwarden application using bitwarden user" | tee -a "$LOG_PATH"
-execute_cmd "su - bitwarden -c \"$BW_DATA/bitwarden.sh update\""
+	echo "----------------------------------------------------------"
+	echo "[i] Upgrade the Bitwarden application using bitwarden user"
+	su - bitwarden -c "$BW_DATA/bitwarden.sh update"
+}
+
+main_code 2>&1 | tee -a "$LOG_PATH"
 
 ##################################################################################
 exit "$RETURN_CODE"
