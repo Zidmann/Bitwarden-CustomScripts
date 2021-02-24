@@ -22,37 +22,37 @@ EXECUTE_EXIT_FUNCTION=0
 
 # Trap management
 function exit_function_auxi(){
-	echo "------------------------------------------------------"
 	if [ -f "$TMP_PATH" ]
 	then
+		echo "------------------------------------------------------"
 		echo "[i] Removing the temporary file $TMP_PATH"
 		rm "$TMP_PATH" 2>/dev/null
 	fi
 
-	echo "------------------------------------------------------"
 	if [ -f "$DSA_KEY_TMP_PATH" ]
 	then
+		echo "------------------------------------------------------"
 		echo "[i] Removing the temporary DSA key $DSA_KEY_TMP_PATH"
 		rm "$TMP_PATH" 2>/dev/null
 	fi
 
-	echo "------------------------------------------------------"
 	if [ -f "$ARCHIVE_TMP_PATH" ]
 	then
+		echo "------------------------------------------------------"
 		echo "[i] Removing the temporary archive $ARCHIVE_TMP_PATH"
 		rm "$TMP_PATH" 2>/dev/null
 	fi
 
-	echo "------------------------------------------------------"
 	if [ -f "$ENCRYPTED_DSA_KEY_TMP_PATH" ]
 	then
+		echo "------------------------------------------------------"
 		echo "[i] Removing the temporary encrypted DSA key $ENCRYPTED_DSA_KEY_TMP_PATH"
 		rm "$TMP_PATH" 2>/dev/null
 	fi
 
-	echo "------------------------------------------------------"
 	if [ -f "$ENCRYPTED_ARCHIVE_TMP_PATH" ]
 	then
+		echo "------------------------------------------------------"
 		echo "[i] Removing the temporary encrypted archive $ENCRYPTED_ARCHIVE_TMP_PATH"
 		rm "$TMP_PATH" 2>/dev/null
 	fi
