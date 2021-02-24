@@ -138,7 +138,7 @@ TMP_PATH="$TMP_DIR/$PREFIX_NAME.1.$$.tmp"
 mkdir -p "$(dirname "$TMP_PATH")"
 
 # Data directory
-mkdir -p "$(dirname "$DATA_DIR")"
+mkdir -p "$DATA_DIR"
 
 # Elapsed time - begin date
 BEGIN_DATE=$(date +%s)
