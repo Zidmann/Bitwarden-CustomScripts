@@ -146,8 +146,8 @@ function main_code(){
 
 	echo "----------------------------------------------------------"
 	echo "[i] Upgrade the Bitwarden application using bitwarden user"
-	su - bitwarden -c "$BW_DATA/bitwarden.sh updateself"
-	su - bitwarden -c "$BW_DATA/bitwarden.sh update"
+	su - bitwarden -c "$BW_DIR/bitwarden.sh updateself"
+	su - bitwarden -c "$BW_DIR/bitwarden.sh update"
 }
 
 main_code 2>&1 | tee -a "$LOG_PATH"
