@@ -115,9 +115,9 @@ fi
 if [ -f "$CONF_DIR/$PREFIX_NAME.env" ]
 then
 	CONF_PATH="$CONF_DIR/$PREFIX_NAME.env"	
-elif [ -f "$CONF_DIR/upgrade_system.env" ]
+elif [ -f "$CONF_DIR/backup_bitwarden.env" ]
 then
-	PREFIX_NAME="upgrade_system"
+	PREFIX_NAME="backup_bitwarden"
 	CONF_PATH="$CONF_DIR/$PREFIX_NAME.env"
 else
 	echo "[-] Impossible to find a valid configuration file"
