@@ -33,28 +33,28 @@ function exit_function_auxi(){
 	then
 		echo "------------------------------------------------------"
 		echo "[i] Removing the temporary DSA key $DSA_KEY_TMP_PATH"
-		rm "$TMP_PATH" 2>/dev/null
+		rm "$DSA_KEY_TMP_PATH" 2>/dev/null
 	fi
 
 	if [ -f "$ARCHIVE_TMP_PATH" ]
 	then
 		echo "------------------------------------------------------"
 		echo "[i] Removing the temporary archive $ARCHIVE_TMP_PATH"
-		rm "$TMP_PATH" 2>/dev/null
+		rm "$ARCHIVE_TMP_PATH" 2>/dev/null
 	fi
 
 	if [ -f "$ENCRYPTED_DSA_KEY_TMP_PATH" ]
 	then
 		echo "------------------------------------------------------"
 		echo "[i] Removing the temporary encrypted DSA key $ENCRYPTED_DSA_KEY_TMP_PATH"
-		rm "$TMP_PATH" 2>/dev/null
+		rm "$ENCRYPTED_DSA_KEY_TMP_PATH" 2>/dev/null
 	fi
 
 	if [ -f "$ENCRYPTED_ARCHIVE_TMP_PATH" ]
 	then
 		echo "------------------------------------------------------"
 		echo "[i] Removing the temporary encrypted archive $ENCRYPTED_ARCHIVE_TMP_PATH"
-		rm "$TMP_PATH" 2>/dev/null
+		rm "$ENCRYPTED_ARCHIVE_TMP_PATH" 2>/dev/null
 	fi
 
 	# Elapsed time - end date and length
