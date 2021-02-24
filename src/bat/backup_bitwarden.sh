@@ -137,6 +137,9 @@ mkdir -p "$(dirname "$LOG_PATH")"
 TMP_PATH="$TMP_DIR/$PREFIX_NAME.1.$$.tmp"
 mkdir -p "$(dirname "$TMP_PATH")"
 
+# Data directory
+mkdir -p "$(dirname "$DATA_DIR")"
+
 # Elapsed time - begin date
 BEGIN_DATE=$(date +%s)
 
@@ -178,23 +181,44 @@ function main_code(){
 	echo "----------------------------------------------------------"
 	echo "[i] Creating an encryption key"
 	openssl rand -out "$DSA_KEY_TMP_PATH" 32
+	RETURN_CODE=$?
+	if [ "$RETURN_CODE" != "0" ]
+	then
+		exit "$RETURN_CODE"
+	fi;
 
 	echo "----------------------------------------------------------"
 	echo "[i] Making the archive of the Bitwarden directory"
 	tar -zvcf "$ARCHIVE_TMP_PATH" "$BW_DATA"
+	RETURN_CODE=$?
+	if [ "$RETURN_CODE" != "0" ]
+	then
+		exit "$RETURN_CODE"
+	fi;
 
 	echo "----------------------------------------------------------"
 	echo "[i] Encrypting the encryption key"
 	openssl rsautl -encrypt -pubin -inkey "$SECURE_KEY_PATH" -in "$DSA_KEY_TMP_PATH" -out "$ENCRYPTED_DSA_KEY_TMP_PATH"
+	RETURN_CODE=$?
+	if [ "$RETURN_CODE" != "0" ]
+	then
+		exit "$RETURN_CODE"
+	fi;
 
 	echo "----------------------------------------------------------"
 	echo "[i] Encrypting the archive"
 	openssl enc -aes-256-cbc -pass file:"$DSA_KEY_TMP_PATH" -in "$ARCHIVE_TMP_PATH" -out "$ENCRYPTED_ARCHIVE_TMP_PATH"
+	RETURN_CODE=$?
+	if [ "$RETURN_CODE" != "0" ]
+	then
+		exit "$RETURN_CODE"
+	fi;
 
 	echo "----------------------------------------------------------"
 	echo "[i] Moving the encrypted key and archive"
 	mv "$ENCRYPTED_DSA_KEY_TMP_PATH" "$ENCRYPTED_DSA_KEY_PATH"
 	mv "$ENCRYPTED_ARCHIVE_TMP_PATH" "$ENCRYPTED_ARCHIVE_PATH"
+
 }
 
 main_code 2>&1 | tee -a "$LOG_PATH"
