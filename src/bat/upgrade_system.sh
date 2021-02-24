@@ -135,19 +135,24 @@ function main_code(){
 	echo "----------------------------------------------------------"
 	echo "[i] Updating the package lists"
 	apt-get update
+	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
 
 	echo "----------------------------------------------------------"
 	echo "[i] Installing the last versions of the packages"
 	apt-get upgrade -y
+	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
 
 	echo "----------------------------------------------------------"
 	echo "[i] Removing the unused dependencies"
 	apt-get autoremove -y
+	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
 
 	echo "----------------------------------------------------------"
 	echo "[i] Upgrade the Bitwarden application using bitwarden user"
 	su - bitwarden -c "$BW_DIR/bitwarden.sh updateself"
+	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
 	su - bitwarden -c "$BW_DIR/bitwarden.sh update"
+	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
 }
 
 main_code 2>&1 | tee -a "$LOG_PATH"
