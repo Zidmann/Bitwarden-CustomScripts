@@ -218,7 +218,6 @@ function main_code(){
 	echo "[i] Moving the encrypted key and archive"
 	mv "$ENCRYPTED_DSA_KEY_TMP_PATH" "$ENCRYPTED_DSA_KEY_PATH"
 	mv "$ENCRYPTED_ARCHIVE_TMP_PATH" "$ENCRYPTED_ARCHIVE_PATH"
-
 }
 
 main_code 2>&1 | tee -a "$LOG_PATH"
