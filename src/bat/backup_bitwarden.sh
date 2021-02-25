@@ -29,11 +29,11 @@ function exit_function_auxi(){
 		rm "$TMP_PATH" 2>/dev/null
 	fi
 
-	if [ -f "$DSA_KEY_TMP_PATH" ]
+	if [ -f "$AES_KEY_TMP_PATH" ]
 	then
 		echo "------------------------------------------------------"
-		echo "[i] Removing the temporary DSA key $DSA_KEY_TMP_PATH"
-		rm "$DSA_KEY_TMP_PATH" 2>/dev/null
+		echo "[i] Removing the temporary AES key $AES_KEY_TMP_PATH"
+		rm "$AES_KEY_TMP_PATH" 2>/dev/null
 	fi
 
 	if [ -f "$ARCHIVE_TMP_PATH" ]
@@ -43,11 +43,11 @@ function exit_function_auxi(){
 		rm "$ARCHIVE_TMP_PATH" 2>/dev/null
 	fi
 
-	if [ -f "$ENCRYPTED_DSA_KEY_TMP_PATH" ]
+	if [ -f "$ENCRYPTED_AES_KEY_TMP_PATH" ]
 	then
 		echo "------------------------------------------------------"
-		echo "[i] Removing the temporary encrypted DSA key $ENCRYPTED_DSA_KEY_TMP_PATH"
-		rm "$ENCRYPTED_DSA_KEY_TMP_PATH" 2>/dev/null
+		echo "[i] Removing the temporary encrypted AES key $ENCRYPTED_AES_KEY_TMP_PATH"
+		rm "$ENCRYPTED_AES_KEY_TMP_PATH" 2>/dev/null
 	fi
 
 	if [ -f "$ENCRYPTED_ARCHIVE_TMP_PATH" ]
@@ -148,13 +148,13 @@ EXECUTE_EXIT_FUNCTION=1
 # Main paths
 SECURE_KEY_PATH="$CONF_DIR/$SECURE_KEY_FILENAME"
 
-DSA_KEY_TMP_PATH="$TMP_DIR/$DSA_KEY_FILENAME"
+AES_KEY_TMP_PATH="$TMP_DIR/$AES_KEY_FILENAME"
 ARCHIVE_TMP_PATH="$TMP_DIR/$ARCHIVE_FILENAME"
 
-ENCRYPTED_DSA_KEY_TMP_PATH="$TMP_DIR/$ENCRYPTED_DSA_KEY_FILENAME"
+ENCRYPTED_AES_KEY_TMP_PATH="$TMP_DIR/$ENCRYPTED_AES_KEY_FILENAME"
 ENCRYPTED_ARCHIVE_TMP_PATH="$TMP_DIR/$ENCRYPTED_ARCHIVE_FILENAME"
 
-ENCRYPTED_DSA_KEY_PATH="$DATA_DIR/$ENCRYPTED_DSA_KEY_FILENAME"
+ENCRYPTED_AES_KEY_PATH="$DATA_DIR/$ENCRYPTED_AES_KEY_FILENAME"
 ENCRYPTED_ARCHIVE_PATH="$DATA_DIR/$ENCRYPTED_ARCHIVE_FILENAME"
 
 ##################################################################################
@@ -175,12 +175,12 @@ function main_code(){
 	echo "TMP_PATH=$TMP_PATH"
 	echo ""
 	echo "SECURE_KEY_PATH=$SECURE_KEY_PATH"
-	echo "ENCRYPTED_DSA_KEY_PATH=$ENCRYPTED_DSA_KEY_PATH"
+	echo "ENCRYPTED_AES_KEY_PATH=$ENCRYPTED_AES_KEY_PATH"
 	echo "ENCRYPTED_ARCHIVE_PATH=$ENCRYPTED_ARCHIVE_PATH"
 
 	echo "----------------------------------------------------------"
 	echo "[i] Creating an encryption key"
-	openssl rand -out "$DSA_KEY_TMP_PATH" 32
+	openssl rand -out "$AES_KEY_TMP_PATH" 32
 	RETURN_CODE=$?
 	if [ "$RETURN_CODE" != "0" ]
 	then
@@ -198,7 +198,7 @@ function main_code(){
 
 	echo "----------------------------------------------------------"
 	echo "[i] Encrypting the encryption key"
-	openssl rsautl -encrypt -pubin -inkey "$SECURE_KEY_PATH" -in "$DSA_KEY_TMP_PATH" -out "$ENCRYPTED_DSA_KEY_TMP_PATH"
+	openssl rsautl -encrypt -pubin -inkey "$SECURE_KEY_PATH" -in "$AES_KEY_TMP_PATH" -out "$ENCRYPTED_AES_KEY_TMP_PATH"
 	RETURN_CODE=$?
 	if [ "$RETURN_CODE" != "0" ]
 	then
@@ -207,7 +207,7 @@ function main_code(){
 
 	echo "----------------------------------------------------------"
 	echo "[i] Encrypting the archive"
-	openssl enc -aes-256-cbc -pbkdf2 -pass file:"$DSA_KEY_TMP_PATH" -in "$ARCHIVE_TMP_PATH" -out "$ENCRYPTED_ARCHIVE_TMP_PATH"
+	openssl enc -aes-256-cbc -pbkdf2 -pass file:"$AES_KEY_TMP_PATH" -in "$ARCHIVE_TMP_PATH" -out "$ENCRYPTED_ARCHIVE_TMP_PATH"
 	RETURN_CODE=$?
 	if [ "$RETURN_CODE" != "0" ]
 	then
@@ -216,7 +216,7 @@ function main_code(){
 
 	echo "----------------------------------------------------------"
 	echo "[i] Moving the encrypted key and archive"
-	mv "$ENCRYPTED_DSA_KEY_TMP_PATH" "$ENCRYPTED_DSA_KEY_PATH"
+	mv "$ENCRYPTED_AES_KEY_TMP_PATH" "$ENCRYPTED_AES_KEY_PATH"
 	mv "$ENCRYPTED_ARCHIVE_TMP_PATH" "$ENCRYPTED_ARCHIVE_PATH"
 }
 
