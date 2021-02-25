@@ -207,7 +207,7 @@ function main_code(){
 
 	echo "----------------------------------------------------------"
 	echo "[i] Encrypting the archive"
-	openssl enc -aes-256-cbc -pass file:"$DSA_KEY_TMP_PATH" -in "$ARCHIVE_TMP_PATH" -out "$ENCRYPTED_ARCHIVE_TMP_PATH"
+	openssl enc -aes-256-cbc -pbkdf2 -pass file:"$DSA_KEY_TMP_PATH" -in "$ARCHIVE_TMP_PATH" -out "$ENCRYPTED_ARCHIVE_TMP_PATH"
 	RETURN_CODE=$?
 	if [ "$RETURN_CODE" != "0" ]
 	then
