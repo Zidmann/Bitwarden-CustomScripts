@@ -28,11 +28,17 @@ openssl genrsa -out bitwarden.pem 2048
 openssl rsa -in bitwarden.pem -out bitwarden.pub -outform PEM -pubout
 ```
 
-To decrypt 
+To decrypt the key and the archive :
 ```bash
-# Step 1 - Decrypting the AES key file with private RSA key in pass.bin file
+# Step 1 - Decrypting the AES key file with private RSA key to pass.bin file
 openssl rsautl -decrypt -inkey bitwarden.pem -in pass.<DATE>.<TIME>.bin.enc -out pass.bin
 
-# Step 2 - Decrypting the archive in bitwarden.tar.gz file
-openssl enc -aes-256-cbc -d -pass file:pass.bin -in bitwarden_<DATE>.<TIME>.tar.gz.enc -out bitwarden.tar.gz
+# Step 2 - Decrypting the archive to bitwarden.tar.gz file
+openssl enc -aes-256-cbc -pbkdf2 -d -pass file:pass.bin -in bitwarden.<DATE>.<TIME>.tar.gz.enc -out bitwarden.tar.gz
 ```
+
+To check the content in an archive :
+```bash
+tar -tvf bitwarden.tar.gz
+```
+
