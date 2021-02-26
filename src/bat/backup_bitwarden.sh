@@ -25,29 +25,29 @@ function exit_function_auxi(){
 	if [ -f "$AES_KEY_TMP_PATH" ]
 	then
 		echo "------------------------------------------------------"
-		echo "[i] Removing the temporary AES key $AES_KEY_TMP_PATH"
-		rm "$AES_KEY_TMP_PATH" 2>/dev/null
+		echo "[i] Removing completly the temporary AES key $AES_KEY_TMP_PATH"
+		shred -n 1 -uz "$AES_KEY_TMP_PATH"
 	fi
 
 	if [ -f "$ARCHIVE_TMP_PATH" ]
 	then
 		echo "------------------------------------------------------"
-		echo "[i] Removing the temporary archive $ARCHIVE_TMP_PATH"
-		rm "$ARCHIVE_TMP_PATH" 2>/dev/null
+		echo "[i] Removing completly the temporary archive $ARCHIVE_TMP_PATH"
+		shred -n 1 -uz "$ARCHIVE_TMP_PATH"
 	fi
 
 	if [ -f "$ENCRYPTED_AES_KEY_TMP_PATH" ]
 	then
 		echo "------------------------------------------------------"
 		echo "[i] Removing the temporary encrypted AES key $ENCRYPTED_AES_KEY_TMP_PATH"
-		rm "$ENCRYPTED_AES_KEY_TMP_PATH" 2>/dev/null
+		rm "$ENCRYPTED_AES_KEY_TMP_PATH"
 	fi
 
 	if [ -f "$ENCRYPTED_ARCHIVE_TMP_PATH" ]
 	then
 		echo "------------------------------------------------------"
 		echo "[i] Removing the temporary encrypted archive $ENCRYPTED_ARCHIVE_TMP_PATH"
-		rm "$ENCRYPTED_ARCHIVE_TMP_PATH" 2>/dev/null
+		rm "$ENCRYPTED_ARCHIVE_TMP_PATH"
 	fi
 
 	# Elapsed time - end date and length
