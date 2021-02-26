@@ -22,13 +22,6 @@ EXECUTE_EXIT_FUNCTION=0
 
 # Trap management
 function exit_function_auxi(){
-	if [ -f "$TMP_PATH" ]
-	then
-		echo "------------------------------------------------------"
-		echo "[i] Removing the temporary file $TMP_PATH"
-		rm "$TMP_PATH" 2>/dev/null
-	fi
-
 	if [ -f "$AES_KEY_TMP_PATH" ]
 	then
 		echo "------------------------------------------------------"
@@ -134,8 +127,14 @@ LOG_PATH=${1:-"${LOG_DIR}/$PREFIX_NAME.$(hostname).$TODAYDATE.$TODAYTIME.log"}
 mkdir -p "$(dirname "$LOG_PATH")"
 
 # Temporary file path
-TMP_PATH="$TMP_DIR/$PREFIX_NAME.1.$$.tmp"
-mkdir -p "$(dirname "$TMP_PATH")"
+AES_KEY_TMP_PATH="$TMP_DIR/$AES_KEY_FILENAME.$PREFIX_NAME.1.$$.tmp"
+ARCHIVE_TMP_PATH="$TMP_DIR/$ARCHIVE_FILENAME.$PREFIX_NAME.2.$$.tmp"
+ENCRYPTED_AES_KEY_TMP_PATH="$TMP_DIR/$ENCRYPTED_AES_KEY_FILENAME.$PREFIX_NAME.3.$$.tmp"
+ENCRYPTED_ARCHIVE_TMP_PATH="$TMP_DIR/$ENCRYPTED_ARCHIVE_FILENAME.$PREFIX_NAME.4.$$.tmp"
+mkdir -p "$(dirname "$AES_KEY_TMP_PATH")"
+mkdir -p "$(dirname "$ARCHIVE_TMP_PATH")"
+mkdir -p "$(dirname "$ENCRYPTED_AES_KEY_TMP_PATH")"
+mkdir -p "$(dirname "$ENCRYPTED_ARCHIVE_TMP_PATH")"
 
 # Data directory
 mkdir -p "$DATA_DIR"
@@ -147,13 +146,6 @@ EXECUTE_EXIT_FUNCTION=1
 
 # Main paths
 SECURE_KEY_PATH="$CONF_DIR/$SECURE_KEY_FILENAME"
-
-AES_KEY_TMP_PATH="$TMP_DIR/$AES_KEY_FILENAME"
-ARCHIVE_TMP_PATH="$TMP_DIR/$ARCHIVE_FILENAME"
-
-ENCRYPTED_AES_KEY_TMP_PATH="$TMP_DIR/$ENCRYPTED_AES_KEY_FILENAME"
-ENCRYPTED_ARCHIVE_TMP_PATH="$TMP_DIR/$ENCRYPTED_ARCHIVE_FILENAME"
-
 ENCRYPTED_AES_KEY_PATH="$DATA_DIR/$ENCRYPTED_AES_KEY_FILENAME"
 ENCRYPTED_ARCHIVE_PATH="$DATA_DIR/$ENCRYPTED_ARCHIVE_FILENAME"
 
@@ -172,7 +164,10 @@ function main_code(){
 	echo "Version : $SCRIPT_VERSION"
 	echo ""
 	echo "LOG_PATH=$LOG_PATH"
-	echo "TMP_PATH=$TMP_PATH"
+	echo "AES_KEY_TMP_PATH=$AES_KEY_TMP_PATH"
+	echo "ARCHIVE_TMP_PATH=$ARCHIVE_TMP_PATH"
+	echo "ENCRYPTED_AES_KEY_TMP_PATH=$ENCRYPTED_AES_KEY_TMP_PATH"
+	echo "ENCRYPTED_ARCHIVE_TMP_PATH=$ENCRYPTED_ARCHIVE_TMP_PATH"
 	echo ""
 	echo "SECURE_KEY_PATH=$SECURE_KEY_PATH"
 	echo "ENCRYPTED_AES_KEY_PATH=$ENCRYPTED_AES_KEY_PATH"
