@@ -23,9 +23,9 @@ EXECUTE_EXIT_FUNCTION=0
 
 # Trap management
 function exit_function_auxi(){
-	echo "------------------------------------------------------"
 	if [ -f "$TMP_PATH" ]
 	then
+		echo "------------------------------------------------------"
 		echo "[i] Removing the temporary file $TMP_PATH"
 		rm "$TMP_PATH" 2>/dev/null
 	fi
