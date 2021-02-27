@@ -19,14 +19,14 @@ exit_line () {
 ## Check if the GCP configuration file exists
 if [ -z "$GCP_CONF_FILE" ]
 then
-	echo " [-] No configuration file found"
+	echo "  [-] No configuration file found"
 	exit_line 1
 fi
 
 ## Check if the file to send exists
 if [ -z "$FILEPATH" ]
 then
-	echo " [-] No file to send"
+	echo "  [-] No file to send"
 	exit_line 1
 fi
 
@@ -38,7 +38,7 @@ echo gsutil cp "$FILEPATH" "$DISTANTPATH"
 RETURN_CODE=$?
 if [ "$RETURN_CODE" != "0" ]
 then
-	echo " [-] Error in the copy to the Google Cloud Platform"
+	echo "  [-] Error in the copy to the Google Cloud Platform"
 	exit_line "$RETURN_CODE"
 fi
 
@@ -46,7 +46,7 @@ fi
 mv "$DISTANTPATH" "$SENT_DATA_DIR/"
 if [ "$RETURN_CODE" != "0" ]
 then
-	echo " [-] Error in the move of the file to the sent files directory"
+	echo "  [-] Error in the move of the file to the sent files directory"
 	exit_line "$RETURN_CODE"
 fi
 
