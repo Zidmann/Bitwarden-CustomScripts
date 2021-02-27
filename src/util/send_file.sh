@@ -53,7 +53,7 @@ then
 fi
 
 ## Move the file in the sent directory
-mv "$DISTANTPATH" "$SENT_DATA_DIR/"
+mv "$FILEPATH" "$SENT_DATA_DIR/"
 if [ "$RETURN_CODE" != "0" ]
 then
 	echo "  [-] Error in the move of the file to the sent files directory"
