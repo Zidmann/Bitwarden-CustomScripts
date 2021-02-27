@@ -121,8 +121,15 @@ function main_code(){
 
 	echo "----------------------------------------------------------"
 	echo "[i] Sending the files in the data directory"
-	find "$DATA_DIR" -type f -maxdepth 1 -exec "$UTIL_DIR/send_file.sh" {} \;
-	RETURN_CODE=$?
+	echo "----------------------------------------------------------"
+	echo " [i] Sending the encrypted archive files"
+	find "$DATA_DIR" -type f -name "$ENCRYPTED_ARCHIVE_FILEPATTERN" -maxdepth 1 -exec "$UTIL_DIR/send_file.sh" "FILETAR" {} \;
+	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
+
+	echo "----------------------------------------------------------"
+	echo " [i] Sending the encrypted key files"
+	find "$DATA_DIR" -type f -name "$ENCRYPTED_AES_KEY_FILEPATTERN" -maxdepth 1 -exec "$UTIL_DIR/send_file.sh" "FILEKEY" {} \;
+	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
 }
 
 main_code 2>&1 | tee -a "$LOG_PATH"
