@@ -8,10 +8,11 @@ FILEPATH="$*"
 
 EXITCODE=0
 
+echo " [i] Push $FILEPATH file"
+
 ## Definition of the exit function
 exit_line () {
 	local EXITCODE=$1
-	echo " ---------------------------------------------------------"
 	exit "$EXITCODE"
 }
 
