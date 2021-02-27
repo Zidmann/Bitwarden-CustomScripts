@@ -35,7 +35,12 @@ then
 fi
 
 ## Extract the distant bucket storage
-DISTANTPATH=$(awk -F';' -v KEY_V="$KEY" '{if($1==KEY_V)={print $2}}' "$GCP_CONF_FILE" | tail -n1)
+DISTANTPATH=$(awk -F';' -v KEY_V="$KEY" '{if($1==KEY_V)={print $2}}' "$GCP_CONF_FILE" 2>/dev/null | tail -n1)
+if [ "$DISTANTPATH" == "" ]
+then
+	echo "  [-] Error no distant path identified for $KEY"
+	exit_line 1
+fi
 
 
 ## Send the file with gsutil tool
