@@ -99,7 +99,7 @@ LOG_PATH=${1:-"${LOG_DIR}/$PREFIX_NAME.$(hostname).$TODAYDATE.$TODAYTIME.log"}
 mkdir -p "$(dirname "$LOG_PATH")"
 
 # Define the sent file directory
-mkdir -p "$(dirname "$SENT_DATA_DIR")"
+mkdir -p "$SENT_DATA_DIR"
 
 # Elapsed time - begin date
 BEGIN_DATE=$(date +%s)
