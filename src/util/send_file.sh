@@ -8,6 +8,10 @@ FILEPATH="$*"
 
 EXITCODE=0
 
+# Load the common environment variables
+DIRNAME="$(dirname "$(dirname "$(readlink -f "$0")")")"
+source "$DIRNAME/conf/common.env"
+
 echo " [i] Push $FILEPATH file"
 
 ## Definition of the exit function
