@@ -21,14 +21,14 @@ exit_line () {
 }
 
 ## Check if the GCP configuration file exists
-if [ -z "$GCP_CONF_FILE" ]
+if [ ! -f "$GCP_CONF_FILE" ]
 then
 	echo "  [-] No configuration file found"
 	exit_line 1
 fi
 
 ## Check if the file to send exists
-if [ -z "$FILEPATH" ]
+if [ ! -f "$FILEPATH" ]
 then
 	echo "  [-] No file to send"
 	exit_line 1
@@ -36,6 +36,7 @@ fi
 
 ## Extract the distant bucket storage
 DISTANTPATH=$(awk -F';' -v KEY_V="$KEY" '{if($1==KEY_V)={print $2}}' "$GCP_CONF_FILE" | tail -n1)
+
 
 ## Send the file with gsutil tool
 echo gsutil cp "$FILEPATH" "$DISTANTPATH"
