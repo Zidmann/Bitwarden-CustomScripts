@@ -87,7 +87,7 @@ fi
 
 if [ -f "$CONF_DIR/$PREFIX_NAME.env" ]
 then
-	CONF_PATH="$CONF_DIR/$PREFIX_NAME.env"	
+	CONF_PATH="$CONF_DIR/$PREFIX_NAME.env"
 elif [ -f "$CONF_DIR/upgrade_system.env" ]
 then
 	PREFIX_NAME="upgrade_system"
