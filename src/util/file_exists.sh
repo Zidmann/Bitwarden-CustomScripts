@@ -15,12 +15,12 @@ echo "----------------------------------"
 echo " FILE EXISTENCE CHECK             "
 echo "----------------------------------"
 
-if [ "$EXISTS" == "1" ]
+if [ "$EXISTS" == "0" ]
 then
-	echo "[+] File $FILEPATH exists"
-	exit_line 0
-else
 	echo "[-] File $FILEPATH doesn't exist"
 	exit_line 1
+else
+	echo "[+] File $FILEPATH exists"
+	exit_line 0
 fi
 
