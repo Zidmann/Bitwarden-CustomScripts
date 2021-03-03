@@ -98,8 +98,33 @@ trap "interrupt_script SIGTERM" SIGTERM
 DIRNAME="$(dirname "$(dirname "$(readlink -f "$0")")")"
 CONF_DIR="$DIRNAME/conf"
 
+PREFIX_NAME="$(basename "$(readlink -f "$0")")"
+NBDELIMITER=$(echo "$PREFIX_NAME" | awk -F"." '{print NF-1}')
+
+if [ "$NBDELIMITER" != "0" ]
+then
+	PREFIX_NAME=$(echo "$PREFIX_NAME" | awk 'BEGIN{FS="."; OFS="."; ORS="\n"} NF{NF-=1};1')
+fi
+
+if [ -f "$CONF_DIR/$PREFIX_NAME.env" ]
+then
+	CONF_PATH="$CONF_DIR/$PREFIX_NAME.env"
+elif [ -f "$CONF_DIR/main.env" ]
+then
+	PREFIX_NAME="main"
+	CONF_PATH="$CONF_DIR/$PREFIX_NAME.env"
+else
+	echo "[-] Impossible to find a valid configuration file"
+	exit "$RETURN_CODE"
+fi
+
 # Sourcing the useful variables
-source "$CONF_DIR/common.env"
+source "$CONF_PATH"
+LOG_DIR="$DIRNAME/log"
+
+# Log file path
+LOG_PATH="${LOG_DIR}/$PREFIX_NAME.$(hostname).$TODAYDATE.$TODAYTIME.log"
+mkdir -p "$(dirname "$LOG_PATH")"
 
 function main_code(){	echo ""
 	echo "======================================================"
@@ -149,3 +174,8 @@ function main_code(){	echo ""
 
 	exit "$RETURN_CODE"
 }
+
+main_code 2>&1 | tee -a "$LOG_PATH"
+
+##################################################################################
+exit "$RETURN_CODE"
