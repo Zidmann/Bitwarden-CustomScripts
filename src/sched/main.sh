@@ -154,7 +154,7 @@ function main_code(){	echo ""
 	fi;
 
 	# Step 3 : Check if the public key exists to encrypt backups
-	"$UTIL_DIR/file_exists.sh" "$CONF_DIR/bitwarden.pem"
+	"$UTIL_DIR/file_exists.sh" "$CONF_DIR/$SECURE_KEY_FILENAME"
 	RETURN_CODE=$?
 	if [ "$RETURN_CODE" != "0" ]
 	then
