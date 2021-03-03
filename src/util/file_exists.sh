@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Auxiliary script to check if a user exists or not
+# Auxiliary script to check if a file exists or not
 
-USER="$*"
-EXISTS=$(id "$USER" 2>/dev/null | wc -l)
+FILEPATH="$*"
+EXISTS=$(stat "$FILEPATH" 2>/dev/null | wc -l)
 
 ## Definition of the exit function
 exit_line () {
@@ -12,15 +12,15 @@ exit_line () {
 }
 
 echo "----------------------------------"
-echo " USER EXISTENCE CHECK             "
+echo " FILE EXISTENCE CHECK             "
 echo "----------------------------------"
 
 if [ "$EXISTS" == "1" ]
 then
-	echo "[+] User $USER exists"
+	echo "[+] File $FILEPATH exists"
 	exit_line 0
 else
-	echo "[-] User $USER doesn't exist"
+	echo "[-] File $FILEPATH doesn't exist"
 	exit_line 1
 fi
 

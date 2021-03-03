@@ -11,6 +11,14 @@ The backups will be encrypted and sent to a cloud environment in the case the Bi
 * The cloud environment must be Google Cloud Platform which supposes that you own an account or at least have access on bucket storage
 * RSA private and public keys must be created previously and only the public one must be on the Bitwarden hosting machine
 
+## Scheduling
+The scripts will be scheduled by calling sched/main.sh every day at 02' when no user should use Bitwarden.
+
+Below the crontab configuration :
+```bash
+0 2 * * * /root/Bitwarden-CustomScripts/src/main.sh >/dev/null 2>&1
+```
+
 ## Dependancies
 * To ensure the link between Bitwarden host machine and Google Cloud Platform the Cloud SDK must be installed and configured.
 

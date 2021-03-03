@@ -5,7 +5,6 @@
 USERID=$EUID
 USER=$(whoami)
 
-
 ## Definition of the exit function
 exit_line () {
 	local EXITCODE=$1
