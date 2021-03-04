@@ -16,7 +16,7 @@ The scripts will be scheduled by calling sched/main.sh every day at 02' when no 
 
 Below the crontab configuration :
 ```bash
-0 2 * * * /root/Bitwarden-CustomScripts/src/main.sh >/dev/null 2>&1
+0 2 * * * /root/Bitwarden-CustomScripts/src/sched/main.sh >/dev/null 2>&1
 ```
 
 ## Dependancies
