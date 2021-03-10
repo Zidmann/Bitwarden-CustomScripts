@@ -137,7 +137,7 @@ function main_code(){	echo ""
 	echo "Version : $SCRIPT_VERSION"
 	echo ""
 
-	# Step 1 : Check if the user is root to have all the privilegies
+	# Step 1 : Check if the user is root to have all the privileges
 	"$UTIL_DIR/user_root.sh"
 	RETURN_CODE=$?
 	if [ "$RETURN_CODE" != "0" ]

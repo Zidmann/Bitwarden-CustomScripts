@@ -52,7 +52,7 @@ then
 	exit_line "$RETURN_CODE"
 fi
 
-## Move the file in the sent directory
+## Move the file in the sent files directory
 mv "$FILEPATH" "$SENT_DATA_DIR/"
 if [ "$RETURN_CODE" != "0" ]
 then

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Auxiliary script to check if user is root
+# Auxiliary script to check if the current user is root
 
 USERID=$EUID
 USER=$(whoami)
