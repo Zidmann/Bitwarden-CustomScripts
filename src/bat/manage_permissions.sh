@@ -3,10 +3,9 @@
 ##################################################################################
 ## AUTHOR : Emmanuel ZIDEL-CAUFFET - Zidmann (emmanuel.zidel@gmail.com)
 ##################################################################################
-## This script will launch all the different scripts dedicated to maintain
-## the Bitwarden hosting device
+## This script will be used to apply the appropriate permissions
 ##################################################################################
-## 2021/03/02 - First release of the script
+## 2021/03/17 - First release of the script
 ##################################################################################
 
 
@@ -23,32 +22,11 @@ EXECUTE_EXIT_FUNCTION=0
 
 # Trap management
 function exit_function_auxi(){
-	if [ -f "$AES_KEY_TMP_PATH" ]
+	if [ -f "$TMP_PATH" ]
 	then
 		echo "------------------------------------------------------"
-		echo "[i] Removing completly the temporary AES key $AES_KEY_TMP_PATH"
-		shred -n 1 -uz "$AES_KEY_TMP_PATH"
-	fi
-
-	if [ -f "$ARCHIVE_TMP_PATH" ]
-	then
-		echo "------------------------------------------------------"
-		echo "[i] Removing completly the temporary archive $ARCHIVE_TMP_PATH"
-		shred -n 1 -uz "$ARCHIVE_TMP_PATH"
-	fi
-
-	if [ -f "$ENCRYPTED_AES_KEY_TMP_PATH" ]
-	then
-		echo "------------------------------------------------------"
-		echo "[i] Removing the temporary encrypted AES key $ENCRYPTED_AES_KEY_TMP_PATH"
-		rm "$ENCRYPTED_AES_KEY_TMP_PATH"
-	fi
-
-	if [ -f "$ENCRYPTED_ARCHIVE_TMP_PATH" ]
-	then
-		echo "------------------------------------------------------"
-		echo "[i] Removing the temporary encrypted archive $ENCRYPTED_ARCHIVE_TMP_PATH"
-		rm "$ENCRYPTED_ARCHIVE_TMP_PATH"
+		echo "[i] Removing the temporary file $TMP_PATH"
+		rm "$TMP_PATH" 2>/dev/null
 	fi
 
 	# Elapsed time - end date and length
@@ -109,73 +87,79 @@ fi
 if [ -f "$CONF_DIR/$PREFIX_NAME.env" ]
 then
 	CONF_PATH="$CONF_DIR/$PREFIX_NAME.env"
-elif [ -f "$CONF_DIR/main.env" ]
+elif [ -f "$CONF_DIR/manage_permissions.env" ]
 then
-	PREFIX_NAME="main"
+	PREFIX_NAME="manage_permissions"
 	CONF_PATH="$CONF_DIR/$PREFIX_NAME.env"
 else
 	echo "[-] Impossible to find a valid configuration file"
 	exit "$RETURN_CODE"
 fi
 
-# Sourcing the useful variables
+# Loading configuration file
 source "$CONF_PATH"
 LOG_DIR="$DIRNAME/log"
+TMP_DIR="$DIRNAME/tmp"
 
 # Log file path
-LOG_PATH="${LOG_DIR}/$PREFIX_NAME.$(hostname).$TODAYDATE.$TODAYTIME.log"
+LOG_PATH=${1:-"${LOG_DIR}/$PREFIX_NAME.$(hostname).$TODAYDATE.$TODAYTIME.log"}
 mkdir -p "$(dirname "$LOG_PATH")"
 
-function main_code(){	echo ""
+# Temporary file path
+TMP_PATH="$TMP_DIR/$PREFIX_NAME.1.$$.tmp"
+mkdir -p "$(dirname "$TMP_PATH")"
+
+# Elapsed time - begin date
+BEGIN_DATE=$(date +%s)
+
+EXECUTE_EXIT_FUNCTION=1
+
+##################################################################################
+# 
+##################################################################################
+function change_permission(){
+	local OWNER=$1
+	shift
+	local DIRECTORY=$0
+
+	echo chown "$OWNER":"$OWNER" "$DIRECTORY"
+	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
+
+	echo chmod og-rwx "$DIRECTORY"
+	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
+}
+
+function main_code(){
+	echo ""
 	echo "======================================================"
 	echo "======================================================"
-	echo "= HEAP SCRIPT TO SCHEDULE ALL THE ACTIONS            ="
+	echo "= SCRIPT TO MANAGE PERMISSIONS                       ="
 	echo "======================================================"
 	echo "======================================================"
 
 	echo "Starting time : $(date)"
 	echo "Version : $SCRIPT_VERSION"
 	echo ""
+	echo "LOG_PATH=$LOG_PATH"
+	echo "TMP_PATH=$TMP_PATH"
 
-	# Step 1 : Check if the user is root to have all the privileges
-	"$UTIL_DIR/user_root.sh"
-	RETURN_CODE=$?
-	if [ "$RETURN_CODE" != "0" ]
-	then
-		exit "$RETURN_CODE"
-	fi;
+	echo "----------------------------------------------------------"
+	HOME_DIR=$(awk -F':' '{if ($1=="bitwarden") print $6}' /etc/passwd)
+	echo "[i] Changing the permission of the bitwarden home directory (DIR=$HOME_DIR)"
+	change_permission "bitwarden" "$HOME_DIR"
 
-	# Step 2 : Check if the user bitwarden exists
-	"$UTIL_DIR/user_exists.sh" "bitwarden"
-	RETURN_CODE=$?
-	if [ "$RETURN_CODE" != "0" ]
-	then
-		exit "$RETURN_CODE"
-	fi;
+	echo "----------------------------------------------------------"
+	echo "[i] Changing the permission of the bitwarden script (DIR=$BW_DATA)"
+	change_permission "bitwarden" "$BW_DATA"
 
-	# Step 3 : Check if the public key exists to encrypt backups
-	"$UTIL_DIR/file_exists.sh" "$CONF_DIR/$SECURE_KEY_FILENAME"
-	RETURN_CODE=$?
-	if [ "$RETURN_CODE" != "0" ]
-	then
-		exit "$RETURN_CODE"
-	fi;
+	echo "----------------------------------------------------------"
+	echo "[i] Processing the permission of root directory (DIR=/root)"
+	change_permission "root" "/root"
 
-	# Step 4 : Change permissions, backup and send the data in an external space
-	"$BAT_DIR/manage_permissions.sh"
-	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
-
-	"$BAT_DIR/backup_bitwarden.sh"
-	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
-
-	"$BAT_DIR/push_data.sh"
-	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
-
-	# Step 5 : Keep the last version of the operating system and of Bitwarden application
-	"$BAT_DIR/upgrade_system.sh"
-	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
-
-	exit "$RETURN_CODE"
+	echo "----------------------------------------------------------"
+	SCRIPT_DIR=$(dirname "$(dirname "$0")")
+	echo "[i] Processing the permission of the current script directory (DIR=$SCRIPT_DIR)"
+	change_permission "root" "$SCRIPT_DIR"
 }
 
 main_code 2>&1 | tee -a "$LOG_PATH"
