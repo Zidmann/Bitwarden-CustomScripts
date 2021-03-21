@@ -122,10 +122,10 @@ function change_permission(){
 	shift
 	local DIRECTORY="$*"
 
-	echo chown "$OWNER":"$OWNER" "$DIRECTORY"
+	chown "$OWNER":"$OWNER" "$DIRECTORY"
 	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
 
-	echo chmod og-rwx "$DIRECTORY"
+	chmod og-rwx "$DIRECTORY"
 	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
 }
 
