@@ -146,17 +146,17 @@ function main_code(){
 
 	echo " ---------------------------------------------------------"
 	echo " [i] Listing the log files"
-	find "$LOG_DIR" -mindepth 2 -maxdepth 2 -mtime "+$RETENTION_PERIOD" -name "*.log" -type f -print 1>>"$TMP_PATH"
+	find "$LOG_DIR"       -maxdepth 1 -mtime "+$RETENTION_PERIOD" -name "*.log" -type f -print 1>>"$TMP_PATH"
 	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
 
 	echo " ---------------------------------------------------------"
 	echo " [i] Listing the backups"
-	find "$DATA_DIR"            -maxdepth 1 -mtime "+$RETENTION_PERIOD" -name "*.log" -type f -print 1>>"$TMP_PATH"
+	find "$DATA_DIR"      -maxdepth 1 -mtime "+$RETENTION_PERIOD" -name "*.enc" -type f -print 1>>"$TMP_PATH"
 	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
 
 	echo " ---------------------------------------------------------"
 	echo " [i] Listing the sent backups"
-	find "$SENT_DATA_DIR"       -maxdepth 1 -mtime "+$RETENTION_PERIOD" -name "*.log" -type f -print 1>>"$TMP_PATH"
+	find "$SENT_DATA_DIR" -maxdepth 1 -mtime "+$RETENTION_PERIOD" -name "*.enc" -type f -print 1>>"$TMP_PATH"
 	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
 
 	sort "$TMP_PATH" > "$TMP2_PATH"
