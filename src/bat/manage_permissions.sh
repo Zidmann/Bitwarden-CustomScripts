@@ -157,9 +157,8 @@ function main_code(){
 	change_permission "root" "/root"
 
 	echo "----------------------------------------------------------"
-	SCRIPT_DIR=$(dirname "$(dirname "$0")")
-	echo "[i] Processing the permission of the current script directory (DIR=$SCRIPT_DIR)"
-	change_permission "root" "$SCRIPT_DIR"
+	echo "[i] Processing the permission of the current script directory (DIR=$DIRNAME)"
+	change_permission "root" "$DIRNAME"
 }
 
 main_code 2>&1 | tee -a "$LOG_PATH"
