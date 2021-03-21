@@ -175,7 +175,7 @@ function main_code(){	echo ""
 	"$BAT_DIR/upgrade_system.sh"
 	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
 
-	# Step 6 : Remove the older logs, sent or archived files
+	# Step 6 : Remove the old logs, sent or archived files
 	"$BAT_DIR/clean_files.sh"
 	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
 
