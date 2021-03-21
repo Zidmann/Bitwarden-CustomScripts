@@ -29,6 +29,13 @@ function exit_function_auxi(){
 		rm "$TMP_PATH" 2>/dev/null
 	fi
 
+	if [ -f "$TMP2_PATH" ]
+	then
+		echo "------------------------------------------------------"
+		echo "[i] Removing the temporary file $TMP2_PATH"
+		rm "$TMP2_PATH" 2>/dev/null
+	fi
+
 	# Elapsed time - end date and length
 	if [ "$BEGIN_DATE" != "" ]
 	then 
