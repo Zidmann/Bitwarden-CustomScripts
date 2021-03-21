@@ -94,10 +94,10 @@ trap "interrupt_script SIGQUIT" SIGQUIT
 trap "interrupt_script SIGTERM" SIGTERM
 
 # Analysis of the path and the names
-DIRNAME="$(dirname "$(dirname "$(readlink -f "$0")")")"
+DIRNAME=$(dirname "$(dirname "$(readlink -f "$0")")")
 CONF_DIR="$DIRNAME/conf"
 
-PREFIX_NAME="$(basename "$(readlink -f "$0")")"
+PREFIX_NAME=$(basename "$(readlink -f "$0")")
 NBDELIMITER=$(echo "$PREFIX_NAME" | awk -F"." '{print NF-1}')
 
 if [ "$NBDELIMITER" != "0" ]
