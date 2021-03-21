@@ -122,9 +122,20 @@ function change_permission(){
 	shift
 	local DIRECTORY="$*"
 
-	chown "$OWNER":"$OWNER" "$DIRECTORY"
+	# Change the owner and group of the directory
+	GROUP=$OWNER
+	chown "$OWNER":"$GROUP" "$DIRECTORY"
 	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
 
+	# Remove all the ACL of the directory (if the command exists)
+	ACL_ENABLED=$(type setfacl 2>/dev/null | wc -l)
+	if [ "$ACL_ENABLED" != "0" ]
+	then
+		setfacl -bn "$DIRECTORY"
+		RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")	
+	fi
+
+	# Remove the group and other rights
 	chmod og-rwx "$DIRECTORY"
 	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
 }
