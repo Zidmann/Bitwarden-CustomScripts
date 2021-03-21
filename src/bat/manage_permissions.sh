@@ -118,9 +118,9 @@ EXECUTE_EXIT_FUNCTION=1
 # 
 ##################################################################################
 function change_permission(){
-	local OWNER=$1
+	local OWNER="$1"
 	shift
-	local DIRECTORY=$0
+	local DIRECTORY="$*"
 
 	echo chown "$OWNER":"$OWNER" "$DIRECTORY"
 	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
