@@ -95,10 +95,10 @@ trap "interrupt_script SIGQUIT" SIGQUIT
 trap "interrupt_script SIGTERM" SIGTERM
 
 # Analysis of the path and the names
-DIRNAME="$(dirname "$(dirname "$(readlink -f "$0")")")"
+DIRNAME=$(dirname "$(dirname "$(readlink -f "$0")")")
 CONF_DIR="$DIRNAME/conf"
 
-PREFIX_NAME="$(basename "$(readlink -f "$0")")"
+PREFIX_NAME=$(basename "$(readlink -f "$0")")
 NBDELIMITER=$(echo "$PREFIX_NAME" | awk -F"." '{print NF-1}')
 
 if [ "$NBDELIMITER" != "0" ]
@@ -173,6 +173,10 @@ function main_code(){	echo ""
 
 	# Step 5 : Keep the last version of the operating system and of Bitwarden application
 	"$BAT_DIR/upgrade_system.sh"
+	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
+
+	# Step 6 : Remove the older logs, sent or archived files
+	"$BAT_DIR/clean_files.sh"
 	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
 
 	exit "$RETURN_CODE"
