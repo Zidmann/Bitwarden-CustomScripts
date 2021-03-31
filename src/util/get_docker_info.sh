@@ -57,7 +57,7 @@ fi
 DOCKER_HEADER=$(echo "$DOCKER_PS" | head -n1)
 
 COLUMN_POS_BEGIN=$(find_word_position "$ATTRIBUTE"   "$DOCKER_HEADER")
-COLUMN_POS_END=$(find_word_position   "$NEXT_COLUMN" "$DOCKER_INFO")
+COLUMN_POS_END=$(find_word_position   "$NEXT_COLUMN" "$DOCKER_HEADER")
 
 echo "$DOCKER_INFO" | cut -c"$COLUMN_POS_BEGIN"-"$COLUMN_POS_END"
 exit 0
