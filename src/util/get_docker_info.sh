@@ -5,7 +5,6 @@ ATTRIBUTE="$1"
 CONTAINERNAME="$2"
 
 IFS='%'
-
 # Definition of the exit function
 exit_line () {
 	local EXITCODE=$1
@@ -22,8 +21,8 @@ find_word_position() {
 
 	for ((i=1; i<=STRING_SIZE; i++))
 	do
-		SUBSTRING_BEGIN=$(echo "$STRING" | cut -c"$i"- | awk -F' ' '{print $1}')
-		if [ "$SUBSTRING_BEGIN" == "$WORD" ]
+		SUBSTRING_CHECK=$(echo "$STRING" | cut -c"$i"- | grep -c "^$WORD ")
+		if [ "$SUBSTRING_CHECK" == "1" ]
 		then
 			echo "$i"
 			break;
