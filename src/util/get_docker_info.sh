@@ -21,7 +21,7 @@ find_word_position() {
 
 	for ((i=1; i<=STRING_SIZE; i++))
 	do
-		SUBSTRING_CHECK=$(echo "$STRING" | cut -c"$i"- | grep -P "(^$WORD$|^$WORD )")
+		SUBSTRING_CHECK=$(echo "$STRING" | cut -c"$i"- | grep -Pc "(^$WORD$|^$WORD )")
 		if [ "$SUBSTRING_CHECK" == "1" ]
 		then
 			echo "$i"
