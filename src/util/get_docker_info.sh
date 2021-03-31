@@ -21,7 +21,13 @@ find_word_position() {
 
 	for ((i=1; i<=STRING_SIZE; i++))
 	do
-		SUBSTRING_CHECK=$(echo "$STRING" | cut -c"$i"- | grep -c "^$WORD ")
+		if [ "$STRING_SIZE" == "$i" ]
+		then
+			SUBSTRING_CHECK=$(echo "$STRING" | cut -c"$i"- | grep -c "^$WORD ")
+		else
+			SUBSTRING_CHECK=$(echo "$STRING" | cut -c"$i"- | grep -c "^$WORD ")
+		fi
+
 		if [ "$SUBSTRING_CHECK" == "1" ]
 		then
 			echo "$i"
@@ -68,13 +74,13 @@ fi
 
 DOCKER_HEADER=$(echo "$DOCKER_PS" | head -n1)
 
-COLUMN_POS_BEGIN=$(find_word_position "$ATTRIBUTE"   "$DOCKER_HEADER")
+COLUMN_POS_BEGIN=$(find_word_position "$ATTRIBUTE" "$DOCKER_HEADER")
 if [ "$NEXT_COLUMN" != "" ]
 then
-	COLUMN_POS_END=$(find_word_position   "$NEXT_COLUMN" "$DOCKER_HEADER")
+	COLUMN_POS_END=$(find_word_position "$NEXT_COLUMN" "$DOCKER_HEADER")
 	COLUMN_POS_END=$((COLUMN_POS_END-1))
 fi
 
-echo "$DOCKER_INFO" | cut -c"$COLUMN_POS_BEGIN"-"$COLUMN_POS_END"
+echo "$DOCKER_INFO" | cut -c"$COLUMN_POS_BEGIN"-"$COLUMN_POS_END" | sed -e 's/^[[:space:]]*//'
 exit 0
 
