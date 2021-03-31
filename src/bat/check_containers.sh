@@ -136,11 +136,13 @@ function main_code(){
 	# List of the Bitwarden containers
 	CONTAINER_NAMES=("bitwarden-nginx" "bitwarden-portal" "bitwarden-admin" "bitwarden-api" "bitwarden-attachments" "bitwarden-sso" "bitwarden-events" "bitwarden-web" "bitwarden-identity" "bitwarden-icons" "bitwarden-mssql" "bitwarden-notifications")
 
+	echo "------------------------------------------------------"
 	echo "[i] Browsing the container name list"
-	for ((i=1; i<=${#CONTAINER_NAMES[@]}; i++))
+	for ((i=0; i<${#CONTAINER_NAMES[@]}; i++))
 	do
 		# Extracting the container name
 		CONTAINER_NAME="${CONTAINER_NAMES[$i]}"
+		echo "------------------------------------------------------"
 		echo " [i] Analyzing the $CONTAINER_NAME container"
 
 		# Checking the status and the health of the container
