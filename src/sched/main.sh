@@ -179,6 +179,10 @@ function main_code(){	echo ""
 	"$BAT_DIR/clean_files.sh"
 	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
 
+	# Step 7 : Check the status, the health and the version of the bitwarden Docker containers
+	"$BAT_DIR/check_containers.sh"
+	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
+
 	exit "$RETURN_CODE"
 }
 
