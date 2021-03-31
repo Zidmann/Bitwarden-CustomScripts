@@ -75,6 +75,8 @@ then
 	COLUMN_POS_END=$((COLUMN_POS_END-1))
 fi
 
-echo "$DOCKER_INFO" | cut -c"$COLUMN_POS_BEGIN"-"$COLUMN_POS_END" | sed -e 's/^[[:space:]]*//'
+VALUE=$(echo "$DOCKER_INFO" | cut -c"$COLUMN_POS_BEGIN"-"$COLUMN_POS_END")
+VALUE="${VALUE##*( )}"
+echo "$VALUE"
 exit 0
 

@@ -142,7 +142,7 @@ function main_code(){
 	do
 		# Extracting the container name
 		CONTAINER_NAME="${CONTAINER_NAMES[$i]}"
-		echo "------------------------------------------------------"
+		echo " -----------------------------------------------------"
 		echo " [i] Analyzing the $CONTAINER_NAME container"
 
 		# Checking the status and the health of the container
