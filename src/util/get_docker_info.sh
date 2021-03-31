@@ -47,14 +47,13 @@ then
 fi
 
 # Step 2 : Check of it exists a container with the given name
-DOCKER_PS=$(docker ps -a 2>/dev/null)
-DOCKER_INFO=$(echo "$DOCKER_PS" | awk -v v_CONTAINERNAME="$CONTAINERNAME" -F' ' '{if($NF==v_CONTAINERNAME){print $0}}' | tail -n1)
+DOCKER_INFO=$(docker ps -a 2>/dev/null | awk -v v_CONTAINERNAME="$CONTAINERNAME" -F' ' '{if($NF==v_CONTAINERNAME){print $0}}' | tail -n1)
 if [ "$DOCKER_INFO" == "" ]
 then
 	exit 1
 fi
 
-DOCKER_HEADER=$(echo "$DOCKER_PS" | head -n1)
+DOCKER_HEADER=$(docker ps -a 2>/dev/null | head -n1)
 
 COLUMN_POS_BEGIN=$(find_word_position "$ATTRIBUTE"   "$DOCKER_HEADER")
 COLUMN_POS_END=$(find_word_position   "$NEXT_COLUMN" "$DOCKER_HEADER")
