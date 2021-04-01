@@ -30,6 +30,28 @@ find_word_position() {
 	done
 }
 
+# String functions
+reverse_string() {
+	local STRING="$*"
+	echo "$STRING" | awk '{ n=split($0,arr,""); for(i=1;i<=n;i++) s=arr[i] s } END{print s}'
+	echo "$STRING"
+}
+
+remove_first_space(){
+	local STRING="$*"
+	STRING="${STRING##*( )}"
+	echo "$STRING"
+}
+
+trim(){
+	local STRING="$*"
+	STRING=$(remove_first_space "$STRING")
+	STRING=$(reverse_string     "$STRING")
+	STRING=$(remove_first_space "$STRING")
+	STRING=$(reverse_string     "$STRING")
+	echo "$STRING"
+}
+
 # Step 1 : Check if the arguments are not empty
 if [ "$ATTRIBUTE" == "" ] || [ "$CONTAINERNAME" == "" ]
 then
@@ -76,7 +98,7 @@ then
 fi
 
 VALUE=$(echo "$DOCKER_INFO" | cut -c"$COLUMN_POS_BEGIN"-"$COLUMN_POS_END")
-VALUE="${VALUE##*( )}"
+VALUE=$(trim "$VALUE")
 echo "$VALUE"
 exit 0
 
