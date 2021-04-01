@@ -213,9 +213,11 @@ function main_code(){
 	echo "[i] Moving the encrypted key and archive"
 	mv "$ENCRYPTED_AES_KEY_TMP_PATH" "$ENCRYPTED_AES_KEY_PATH"
 	mv "$ENCRYPTED_ARCHIVE_TMP_PATH" "$ENCRYPTED_ARCHIVE_PATH"
-}
 
+	exit "$RETURN_CODE"
+}
 main_code 2>&1 | tee -a "$LOG_PATH"
+RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
 
 ##################################################################################
 exit "$RETURN_CODE"

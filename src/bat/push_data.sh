@@ -133,9 +133,11 @@ function main_code(){
 	echo " [i] Sending the encrypted key files"
 	find "$DATA_DIR" -maxdepth 1 -name "$ENCRYPTED_AES_KEY_FILEPATTERN" -type f -exec "$UTIL_DIR/send_file.sh" "FILEKEY" {} \;
 	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
-}
 
+	exit "$RETURN_CODE"
+}
 main_code 2>&1 | tee -a "$LOG_PATH"
+RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
 
 ##################################################################################
 exit "$RETURN_CODE"

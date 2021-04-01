@@ -168,9 +168,11 @@ function main_code(){
 		echo rm -v "$FILE_PATH"
 		RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
 	done < "$TMP2_PATH"
-}
 
+	exit "$RETURN_CODE"
+}
 main_code 2>&1 | tee -a "$LOG_PATH"
+RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
 
 ##################################################################################
 exit "$RETURN_CODE"

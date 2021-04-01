@@ -146,7 +146,7 @@ function main_code(){
 		echo " [i] Analyzing the $CONTAINER_NAME container"
 
 		# Checking the status and the health of the container
-		STATUS=$($UTIL_DIR/get_docker_info.sh "STATUS" "$CONTAINER_NAME")
+		STATUS=$("$UTIL_DIR/get_docker_info.sh" "STATUS" "$CONTAINER_NAME")
 		IS_UP=$(echo "$STATUS" | grep -c "^Up")
 		IS_HEALTHY=$(echo "$STATUS" | grep -c "(healthy)$") 
 		if [ "$IS_UP" == "1" ] && [ "$IS_HEALTHY" == "1" ]
@@ -163,7 +163,7 @@ function main_code(){
 		fi
 
 		# Checking the image name
-		IMAGE=$($UTIL_DIR/get_docker_info.sh "IMAGE" "$CONTAINER_NAME")
+		IMAGE=$("$UTIL_DIR/get_docker_info.sh" "IMAGE" "$CONTAINER_NAME")
 		IMAGENAME=$(echo "$IMAGE" | awk -F':' '{print $1}' | awk -F' ' '{print $2}' | sed -r 's/[/]+/-/g')
 		if [ "$IMAGENAME" == "$CONTAINER_NAME" ]
 		then
@@ -191,9 +191,11 @@ function main_code(){
 			fi		
 		fi
 	done
-}
 
+	exit "$RETURN_CODE"
+}
 main_code 2>&1 | tee -a "$LOG_PATH"
+RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
 
 ##################################################################################
 exit "$RETURN_CODE"

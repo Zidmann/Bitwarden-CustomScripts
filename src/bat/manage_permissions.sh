@@ -158,21 +158,27 @@ function main_code(){
 	HOME_DIR=$(awk -F':' '{if ($1=="bitwarden") print $6}' /etc/passwd)
 	echo "[i] Changing the permission of the bitwarden home directory (DIR=$HOME_DIR)"
 	change_permission "bitwarden" "$HOME_DIR"
+	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
 
 	echo "----------------------------------------------------------"
 	echo "[i] Changing the permission of the bitwarden script (DIR=$BW_DATA)"
 	change_permission "bitwarden" "$BW_DATA"
+	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
 
 	echo "----------------------------------------------------------"
 	echo "[i] Processing the permission of root directory (DIR=/root)"
 	change_permission "root" "/root"
+	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
 
 	echo "----------------------------------------------------------"
 	echo "[i] Processing the permission of the current script directory (DIR=$DIRNAME)"
 	change_permission "root" "$DIRNAME"
-}
+	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
 
+	exit "$RETURN_CODE"
+}
 main_code 2>&1 | tee -a "$LOG_PATH"
+RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
 
 ##################################################################################
 exit "$RETURN_CODE"
