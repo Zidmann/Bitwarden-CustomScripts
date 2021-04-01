@@ -151,14 +151,14 @@ function main_code(){
 		IS_HEALTHY=$(echo "$STATUS" | grep -c "(healthy)$") 
 		if [ "$IS_UP" == "1" ] && [ "$IS_HEALTHY" == "1" ]
 		then
-			echo " [+] Container is up and healthy"
+			echo "  [+] Container is up and healthy"
 		elif [ "$IS_UP" != "1" ]
 		then
-			echo " [-] Container is not up"
+			echo "  [-] Container is not up"
 			RETURN_CODE=1
 		elif [ "$IS_HEALTHY" != "1" ]
 		then
-			echo " [-] Container is not healthy"
+			echo "  [-] Container is not healthy"
 			RETURN_CODE=1
 		fi
 
@@ -167,7 +167,7 @@ function main_code(){
 		IMAGENAME=$(echo "$IMAGE" | awk -F':' '{print $1}' | awk -F' ' '{print $2}' | sed -r 's/[/]+/-/g')
 		if [ "$IMAGENAME" == "$CONTAINER_NAME" ]
 		then
-			echo " [-] Container name ($CONTAINER_NAME) is not image name ($IMAGENAME)"
+			echo "  [-] Container name ($CONTAINER_NAME) is not image name ($IMAGENAME)"
 			RETURN_CODE=1
 		else
 			# Checking the version of the container image
@@ -184,9 +184,9 @@ function main_code(){
 			VERSION=$(echo "$IMAGE" | awk -F':' '{print $NF}')
 			if [ "$VERSION" == "$EXPECTED_VERSION" ]
 			then
-				echo " [+] Version is correct ($VERSION)"
+				echo "  [+] Version is correct ($VERSION)"
 			else
-				echo " [-] Version is incorrect ($VERSION but expected is $EXPECTED_VERSION)"
+				echo "  [-] Version is incorrect ($VERSION but expected is $EXPECTED_VERSION)"
 				RETURN_CODE=1
 			fi		
 		fi
