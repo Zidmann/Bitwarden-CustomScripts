@@ -171,7 +171,7 @@ function main_code(){
 
 	exit "$RETURN_CODE"
 }
-main_code 2>&1 | tee -a "$LOG_PATH"
+main_code > >(tee "$LOG_PATH") 2>&1
 RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
 
 ##################################################################################
