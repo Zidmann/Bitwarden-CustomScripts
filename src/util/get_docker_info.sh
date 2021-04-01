@@ -38,7 +38,7 @@ reverse_string() {
 
 remove_first_space(){
 	local STRING="$*"
-	STRING="${STRING##*( )}"
+	STRING="$(echo $STRING | sed -e 's/^[[:space:]]*//')"
 	echo "$STRING"
 }
 
