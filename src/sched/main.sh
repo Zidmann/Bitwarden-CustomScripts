@@ -23,34 +23,6 @@ EXECUTE_EXIT_FUNCTION=0
 
 # Trap management
 function exit_function_auxi(){
-	if [ -f "$AES_KEY_TMP_PATH" ]
-	then
-		echo "------------------------------------------------------"
-		echo "[i] Removing completly the temporary AES key $AES_KEY_TMP_PATH"
-		shred -n 1 -uz "$AES_KEY_TMP_PATH"
-	fi
-
-	if [ -f "$ARCHIVE_TMP_PATH" ]
-	then
-		echo "------------------------------------------------------"
-		echo "[i] Removing completly the temporary archive $ARCHIVE_TMP_PATH"
-		shred -n 1 -uz "$ARCHIVE_TMP_PATH"
-	fi
-
-	if [ -f "$ENCRYPTED_AES_KEY_TMP_PATH" ]
-	then
-		echo "------------------------------------------------------"
-		echo "[i] Removing the temporary encrypted AES key $ENCRYPTED_AES_KEY_TMP_PATH"
-		rm "$ENCRYPTED_AES_KEY_TMP_PATH"
-	fi
-
-	if [ -f "$ENCRYPTED_ARCHIVE_TMP_PATH" ]
-	then
-		echo "------------------------------------------------------"
-		echo "[i] Removing the temporary encrypted archive $ENCRYPTED_ARCHIVE_TMP_PATH"
-		rm "$ENCRYPTED_ARCHIVE_TMP_PATH"
-	fi
-
 	# Elapsed time - end date and length
 	if [ "$BEGIN_DATE" != "" ]
 	then 
@@ -125,6 +97,11 @@ LOG_DIR="$DIRNAME/log"
 # Log file path
 LOG_PATH="${LOG_DIR}/$PREFIX_NAME.$(hostname).$TODAYDATE.$TODAYTIME.log"
 mkdir -p "$(dirname "$LOG_PATH")"
+
+# Elapsed time - begin date
+BEGIN_DATE=$(date +%s)
+
+EXECUTE_EXIT_FUNCTION=1
 
 function main_code(){	echo ""
 	echo "======================================================"
