@@ -34,7 +34,6 @@ find_word_position() {
 reverse_string() {
 	local STRING="$*"
 	echo "$STRING" | awk '{ n=split($0,arr,""); for(i=1;i<=n;i++) s=arr[i] s } END{print s}'
-	echo "$STRING"
 }
 
 remove_first_space(){
