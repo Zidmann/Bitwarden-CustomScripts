@@ -153,19 +153,23 @@ function main_code(){
 			echo "  [-] Container name ($CONTAINER_NAME) is not image name ($IMAGENAME)"
 			RETURN_CODE=1
 		else
-			# Checking the status and the health of the container
-			STATUS=$("$UTIL_DIR/get_docker_info.sh" "STATUS" "$CONTAINER_NAME")
 
-			# Wait the health finished to start
-			for ((j=0; j<10; j++))
+			# Loop to wait the health check initialisation finished and get the status of the container (timeout is set to 5 min)
+			STATUS_CHECK_BEGIN_DATE=$(date +%s)
+			STATUS_CHECK_ELAPSED_TIME=0
+			while [ $STATUS_CHECK_ELAPSED_TIME -lt 300 ]
 			do
+				# Checking the status and the health of the container
+				STATUS=$("$UTIL_DIR/get_docker_info.sh" "STATUS" "$CONTAINER_NAME")
 				STARTING_HEALTH=$(echo "$STATUS" | grep -c "(health: starting)$")
-				if [ "$STARTING_HEALTH" != "0" ]
+				if [ "$STARTING_HEALTH" == "0" ]
 				then
-					sleep 5
-				else
 					break
 				fi
+
+				sleep 10
+				STATUS_CHECK_END_DATE=$(date +%s)
+				STATUS_CHECK_ELAPSED_TIME=$((STATUS_CHECK_END_DATE - STATUS_CHECK_BEGIN_DATE))		
 			done
 
 			IS_HEALTHY=$(echo "$STATUS" | grep -c "(healthy)$") 
