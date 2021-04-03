@@ -145,37 +145,6 @@ function main_code(){
 		echo " -----------------------------------------------------"
 		echo " [i] Analyzing the $CONTAINER_NAME container"
 
-		# Checking the status and the health of the container
-		STATUS=$("$UTIL_DIR/get_docker_info.sh" "STATUS" "$CONTAINER_NAME")
-
-		# Wait the health finished to start
-		for ((j=0; j<10; j++))
-		do
-			STARTING_HEALTH=$(echo "$STATUS" | grep -c "(health: starting)$")
-			if [ "$STARTING_HEALTH" != "0" ]
-			then
-				sleep 5
-			else
-				break
-			fi
-		done
-
-		IS_HEALTHY=$(echo "$STATUS" | grep -c "(healthy)$") 
-		IS_UP=$(echo "$STATUS" | grep -c "^Up")
-
-		if [ "$IS_UP" == "1" ] && [ "$IS_HEALTHY" == "1" ]
-		then
-			echo "  [+] Container is up and healthy"
-		elif [ "$IS_UP" != "1" ]
-		then
-			echo "  [-] Container is not up"
-			RETURN_CODE=1
-		elif [ "$IS_HEALTHY" != "1" ]
-		then
-			echo "  [-] Container is not healthy"
-			RETURN_CODE=1
-		fi
-
 		# Checking the image name
 		IMAGE=$("$UTIL_DIR/get_docker_info.sh" "IMAGE" "$CONTAINER_NAME")
 		IMAGENAME=$(echo "$IMAGE" | awk -F':' '{print $1}' | awk -F' ' '{print $2}' | sed -r 's/[/]+/-/g')
@@ -184,6 +153,36 @@ function main_code(){
 			echo "  [-] Container name ($CONTAINER_NAME) is not image name ($IMAGENAME)"
 			RETURN_CODE=1
 		else
+			# Checking the status and the health of the container
+			STATUS=$("$UTIL_DIR/get_docker_info.sh" "STATUS" "$CONTAINER_NAME")
+
+			# Wait the health finished to start
+			for ((j=0; j<10; j++))
+			do
+				STARTING_HEALTH=$(echo "$STATUS" | grep -c "(health: starting)$")
+				if [ "$STARTING_HEALTH" != "0" ]
+				then
+					sleep 5
+				else
+					break
+				fi
+			done
+
+			IS_HEALTHY=$(echo "$STATUS" | grep -c "(healthy)$") 
+			IS_UP=$(echo "$STATUS" | grep -c "^Up")
+			if [ "$IS_UP" == "1" ] && [ "$IS_HEALTHY" == "1" ]
+			then
+				echo "  [+] Container is up and healthy"
+			elif [ "$IS_UP" != "1" ]
+			then
+				echo "  [-] Container is not up"
+				RETURN_CODE=1
+			elif [ "$IS_HEALTHY" != "1" ]
+			then
+				echo "  [-] Container is not healthy"
+				RETURN_CODE=1
+			fi
+
 			# Checking the version of the container image
 			COREVERSION=$(grep "COREVERSION=" "$BW_DIR/bitwarden.sh" | head -n1 | awk -F'=' '{print $2}' | awk -F'"' '{print $2}')
 			WEBVERSION=$(grep "WEBVERSION=" "$BW_DIR/bitwarden.sh"   | head -n1 | awk -F'=' '{print $2}' | awk -F'"' '{print $2}')
@@ -196,12 +195,15 @@ function main_code(){
 			fi
 
 			VERSION=$(echo "$IMAGE" | awk -F':' '{print $NF}')
-			if [ "$VERSION" == "$EXPECTED_VERSION" ]
+			if [[ "$IS_UP" == "1"  ||  "$VERSION" != "" ]]
 			then
-				echo "  [+] Version is correct ($VERSION)"
-			else
-				echo "  [-] Version is incorrect ($VERSION but expected is $EXPECTED_VERSION)"
-				RETURN_CODE=1
+				if [ "$VERSION" == "$EXPECTED_VERSION" ]
+				then
+					echo "  [+] Version is correct ($VERSION)"
+				else
+					echo "  [-] Version is incorrect ($VERSION but expected is $EXPECTED_VERSION)"
+					RETURN_CODE=1
+				fi
 			fi		
 		fi
 	done
