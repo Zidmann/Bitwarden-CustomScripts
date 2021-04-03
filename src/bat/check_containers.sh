@@ -147,8 +147,22 @@ function main_code(){
 
 		# Checking the status and the health of the container
 		STATUS=$("$UTIL_DIR/get_docker_info.sh" "STATUS" "$CONTAINER_NAME")
-		IS_UP=$(echo "$STATUS" | grep -c "^Up")
+
+		# Wait the health finished to start
+		for ((j=0; j<10; j++))
+		do
+			STARTING_HEALTH=$(echo "$STATUS" | grep -c "(health: starting)$")
+			if [ "$STARTING_HEALTH" != "0" ]
+			then
+				sleep 5
+			else
+				break
+			fi
+		done
+
 		IS_HEALTHY=$(echo "$STATUS" | grep -c "(healthy)$") 
+		IS_UP=$(echo "$STATUS" | grep -c "^Up")
+
 		if [ "$IS_UP" == "1" ] && [ "$IS_HEALTHY" == "1" ]
 		then
 			echo "  [+] Container is up and healthy"
