@@ -161,7 +161,13 @@ function main_code(){
 	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
 
 	echo "----------------------------------------------------------"
-	echo "[i] Changing the permission of the bitwarden script (DIR=$BW_DATA)"
+	SCRIPTPATH="$BW_DIR/bitwarden.sh"
+	echo "[i] Changing the permission of the bitwarden script (PATH=$SCRIPTPATH)"
+	change_permission "bitwarden" "$SCRIPTPATH"
+	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
+
+	echo "----------------------------------------------------------"
+	echo "[i] Changing the permission of the bitwarden directory (DIR=$BW_DATA)"
 	change_permission "bitwarden" "$BW_DATA"
 	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
 
