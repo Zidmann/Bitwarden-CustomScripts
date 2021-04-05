@@ -17,11 +17,13 @@ The project was not forked since I preferred in this case to start from nothing 
 * RSA private and public keys must be created previously and only the public one must be on the Bitwarden hosting machine
 
 ## Scheduling
-The scripts will be scheduled by calling sched/main.sh every day at 02' when no user should use Bitwarden.
+The scripts will be scheduled by calling sched/main.sh every day at 03' when no user should use Bitwarden.
+The Bitwarden application will be maintained up (and restarted if necessary) with the script sched/keep_up.sh scheduled every 2 hours.
 
 Below the crontab configuration :
 ```bash
-0 2 * * * /root/Bitwarden-CustomScripts/src/sched/main.sh >/dev/null 2>&1
+0 3 * * * /root/Bitwarden-CustomScripts/src/sched/main.sh >/dev/null 2>&1
+0 */2 * * * /root/Bitwarden-CustomScripts/src/sched/keep_up.sh >/dev/null 2>&1
 ```
 
 ## Dependancies
