@@ -23,13 +23,6 @@ EXECUTE_EXIT_FUNCTION=0
 
 # Trap management
 function exit_function_auxi(){
-	if [ -f "$TMP_PATH" ]
-	then
-		echo "------------------------------------------------------"
-		echo "[i] Removing the temporary file $TMP_PATH"
-		rm "$TMP_PATH" 2>/dev/null
-	fi
-
 	# Elapsed time - end date and length
 	if [ "$BEGIN_DATE" != "" ]
 	then 
@@ -100,15 +93,10 @@ fi
 # Loading configuration file
 source "$CONF_PATH"
 LOG_DIR="$DIRNAME/log"
-TMP_DIR="$DIRNAME/tmp"
 
 # Log file path
 LOG_PATH=${1:-"${LOG_DIR}/$PREFIX_NAME.$(hostname).$TODAYDATE.$TODAYTIME.log"}
 mkdir -p "$(dirname "$LOG_PATH")"
-
-# Temporary file path
-TMP_PATH="$TMP_DIR/$PREFIX_NAME.1.$$.tmp"
-mkdir -p "$(dirname "$TMP_PATH")"
 
 # Elapsed time - begin date
 BEGIN_DATE=$(date +%s)
@@ -130,7 +118,6 @@ function main_code(){
 	echo "Version : $SCRIPT_VERSION"
 	echo ""
 	echo "LOG_PATH=$LOG_PATH"
-	echo "TMP_PATH=$TMP_PATH"
 
 	echo "----------------------------------------------------------"
 	echo "[i] Updating the package lists"
