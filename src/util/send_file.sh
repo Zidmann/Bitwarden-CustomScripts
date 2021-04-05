@@ -21,6 +21,7 @@ exit_line () {
 }
 
 ## Check if the GCP configuration file exists
+GCP_CONF_FILE="$CONF_DIR/gcp.conf"
 if [ ! -f "$GCP_CONF_FILE" ]
 then
 	echo "  [-] No configuration file found"
