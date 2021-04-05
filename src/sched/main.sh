@@ -130,8 +130,15 @@ function main_code(){	echo ""
 		exit "$RETURN_CODE"
 	fi;
 
-	# Step 3 : Check if the public key exists to encrypt backups
+	# Step 3 : Check if the public key exists to encrypt backups and the service account key file
 	"$UTIL_DIR/file_exists.sh" "$CONF_DIR/$SECURE_KEY_FILENAME"
+	RETURN_CODE=$?
+	if [ "$RETURN_CODE" != "0" ]
+	then
+		exit "$RETURN_CODE"
+	fi;
+
+	"$UTIL_DIR/file_exists.sh" "$CONF_DIR/$SERVICE_ACCOUNT_CREDENTIAL"
 	RETURN_CODE=$?
 	if [ "$RETURN_CODE" != "0" ]
 	then

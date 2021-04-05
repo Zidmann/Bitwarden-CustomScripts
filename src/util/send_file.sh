@@ -34,6 +34,14 @@ then
 	exit_line 1
 fi
 
+## Check if the service account key file exists
+SERVICE_ACCOUNT_KEY_FILE="$CONF_DIR/$SERVICE_ACCOUNT_CREDENTIAL"
+if [ ! -f "$SERVICE_ACCOUNT_KEY_FILE" ]
+then
+	echo "  [-] No service account key file found"
+	exit_line 1
+fi
+
 ## Extract the distant bucket storage
 DISTANTPATH=$(awk -F';' -v KEY_V="$KEY" '{if($1==KEY_V){print $2}}' "$GCP_CONF_FILE" 2>/dev/null | tail -n1)
 if [ "$DISTANTPATH" == "" ]
@@ -42,8 +50,8 @@ then
 	exit_line 1
 fi
 
-
 ## Send the file with gsutil tool
+export GOOGLE_APPLICATION_CREDENTIALS="$SERVICE_ACCOUNT_KEY_FILE"
 echo gsutil cp "$FILEPATH" "$DISTANTPATH"
 RETURN_CODE=$?
 if [ "$RETURN_CODE" != "0" ]
