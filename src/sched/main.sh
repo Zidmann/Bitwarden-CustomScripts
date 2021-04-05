@@ -113,6 +113,7 @@ function main_code(){	echo ""
 	echo "Starting time : $(date)"
 	echo "Version : $SCRIPT_VERSION"
 	echo ""
+	echo "LOG_PATH=$LOG_PATH"
 
 	# Step 1 : Check if the user is root to have all the privileges
 	"$UTIL_DIR/user_root.sh"

@@ -139,6 +139,7 @@ function main_code(){
 	echo ""
 	echo "LOG_PATH=$LOG_PATH"
 	echo "TMP_PATH=$TMP_PATH"
+	echo "TMP2_PATH=$TMP2_PATH"
 
 	echo "----------------------------------------------------------"
 	echo "[i] Listing the oldest files with more than $RETENTION_PERIOD day(s)"
