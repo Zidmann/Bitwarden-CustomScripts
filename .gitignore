@@ -1,3 +1,11 @@
+# No RSA keys (public and private)
+src/conf/*pub
+src/conf/*pem
+
+# No Google Cloud Platform service account key
+src/conf/*json
+
+# Keep the data/, log/, tmp/ directory empty
 src/data/
 src/log/
 src/tmp/
