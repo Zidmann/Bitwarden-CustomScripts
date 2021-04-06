@@ -180,8 +180,9 @@ function main_code(){	echo ""
 
 	if [ "$FLAG_CONTAINER" == "0" ]
 	then
-		echo "  [i] No Bitwarden container found at all"
-		echo "  The script will be exited"
+		echo "-----------------------------------------------------"
+		echo " [i] No Bitwarden container found at all"
+		echo " The script will be exited"
 		exit "$RETURN_CODE"
 	fi
 
