@@ -142,9 +142,35 @@ function main_code(){	echo ""
 			FLAG_CONTAINER=1
  			STATUS=$("$UTIL_DIR/get_docker_info.sh" "STATUS" "$CONTAINER_NAME")
 			IS_UP=$(echo "$STATUS" | grep -c "^Up")
+
 			if [ "$IS_UP" == "1" ]
 			then
-				echo "  [+] Container is up"
+				# Loop to wait the health check initialisation finished and get the status of the container (timeout is set to 5 min)
+				STATUS_CHECK_BEGIN_DATE=$(date +%s)
+				STATUS_CHECK_ELAPSED_TIME=0
+				while [ $STATUS_CHECK_ELAPSED_TIME -lt 300 ]
+				do
+					# Checking the status and the health of the container
+					STATUS=$("$UTIL_DIR/get_docker_info.sh" "STATUS" "$CONTAINER_NAME")
+					STARTING_HEALTH=$(echo "$STATUS" | grep -c "(health: starting)$")
+					if [ "$STARTING_HEALTH" == "0" ]
+					then
+						break
+					fi
+
+					sleep 10
+					STATUS_CHECK_END_DATE=$(date +%s)
+					STATUS_CHECK_ELAPSED_TIME=$((STATUS_CHECK_END_DATE - STATUS_CHECK_BEGIN_DATE))
+				done
+
+				IS_HEALTHY=$(echo "$STATUS" | grep -c "(healthy)$") 
+				if [ "$IS_HEALTHY" == "1" ]
+				then
+					echo "  [+] Container is up and healthy"
+				else
+					echo "  [-] Container is up and not healthy"
+					RETURN_CODE=1
+				fi
 			else
 				echo "  [-] Container is not up"
 				RETURN_CODE=1
