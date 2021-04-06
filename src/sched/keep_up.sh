@@ -129,6 +129,8 @@ function main_code(){	echo ""
 	then
 		echo "[i] The flag ($FLAG_DISABLED) is present, the script will be stopped"
 		exit "0"
+	else
+		RETURN_CODE=0
 	fi;
 
 	# Step 3 : Change permissions
