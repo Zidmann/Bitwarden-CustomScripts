@@ -135,7 +135,11 @@ function main_code(){
 		# Checking the image name
 		IMAGE=$("$UTIL_DIR/get_docker_info.sh" "IMAGE" "$CONTAINER_NAME")
 		IMAGENAME=$(echo "$IMAGE" | awk -F':' '{print $1}' | awk -F' ' '{print $2}' | sed -r 's/[/]+/-/g')
-		if [ "$IMAGENAME" == "$CONTAINER_NAME" ]
+		if [ "$IMAGE" == "" ]
+		then
+			echo "  [i] No container $CONTAINER_NAME found"
+			RETURN_CODE=1
+		elif [ "$IMAGENAME" == "$CONTAINER_NAME" ]
 		then
 			echo "  [-] Container name ($CONTAINER_NAME) is not image name ($IMAGENAME)"
 			RETURN_CODE=1
