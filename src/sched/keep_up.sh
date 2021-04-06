@@ -122,11 +122,20 @@ function main_code(){	echo ""
 		exit "$RETURN_CODE"
 	fi;
 
-	# Step 2 : Change permissions
+	# Step 2 : Check if the public key exists to encrypt backups and the service account key file
+	"$UTIL_DIR/file_exists.sh" "$COOKIE_DIR/$FLAG_DISABLED"
+	RETURN_CODE=$?
+	if [ "$RETURN_CODE" == "0" ]
+	then
+		echo "[i] The flag ($FLAG_DISABLED) is present, the script will be stopped"
+		exit "0"
+	fi;
+
+	# Step 3 : Change permissions
 	"$BAT_DIR/manage_permissions.sh"
 	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
 
-	# Step 3 : Execute keep_up script
+	# Step 4 : Execute keep_up script
 	"$BAT_DIR/keep_up.sh"
 	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
 

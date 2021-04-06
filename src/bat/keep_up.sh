@@ -120,6 +120,7 @@ function main_code(){	echo ""
 	# Checking all the containers are up
 	echo "------------------------------------------------------"
 	echo "[i] Browsing the container name list"
+	FLAG_CONTAINER=0
 	for ((i=0; i<${#CONTAINER_NAMES[@]}; i++))
 	do
 		# Extracting the container name
@@ -130,11 +131,15 @@ function main_code(){	echo ""
 		# Checking the image name
 		IMAGE=$("$UTIL_DIR/get_docker_info.sh" "IMAGE" "$CONTAINER_NAME")
 		IMAGENAME=$(echo "$IMAGE" | awk -F':' '{print $1}' | awk -F' ' '{print $2}' | sed -r 's/[/]+/-/g')
-		if [ "$IMAGENAME" == "$CONTAINER_NAME" ]
+		if [ "$IMAGENAME" == "" ]
+		then
+			echo "  [i] No container $CONTAINER_NAME found"
+		elif [ "$IMAGENAME" == "$CONTAINER_NAME" ]
 		then
 			echo "  [-] Container name ($CONTAINER_NAME) is not image name ($IMAGENAME)"
 			RETURN_CODE=1
 		else
+			FLAG_CONTAINER=1
  			STATUS=$("$UTIL_DIR/get_docker_info.sh" "STATUS" "$CONTAINER_NAME")
 			IS_UP=$(echo "$STATUS" | grep -c "^Up")
 			if [ "$IS_UP" == "1" ]
@@ -147,9 +152,18 @@ function main_code(){	echo ""
 		fi
 	done
 
+	if [ "$FLAG_CONTAINER" == "0" ]
+	then
+		echo "  [i] No Bitwarden container found at all"
+		echo "  The script will be exited"
+		exit "$RETURN_CODE"
+	fi
+
 	# If at least one container is not up, then restart the bitwarden application
 	if [ "$RETURN_CODE" != "0" ]
 	then
+		echo " -----------------------------------------------------"
+		echo " [-] Something was wrong with Bitwarden containers, a restart will be operated"
 		echo " -----------------------------------------------------"
 		echo " [i] Reboot the Bitwarden application using bitwarden user"
 		su - bitwarden -c "$BW_DIR/bitwarden.sh restart"
