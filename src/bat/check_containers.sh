@@ -144,7 +144,6 @@ function main_code(){
 			echo "  [-] Container name ($CONTAINER_NAME) is not image name ($IMAGENAME)"
 			RETURN_CODE=1
 		else
-
 			# Loop to wait the health check initialisation finished and get the status of the container (timeout is set to 5 min)
 			STATUS_CHECK_BEGIN_DATE=$(date +%s)
 			STATUS_CHECK_ELAPSED_TIME=0
@@ -160,7 +159,7 @@ function main_code(){
 
 				sleep 10
 				STATUS_CHECK_END_DATE=$(date +%s)
-				STATUS_CHECK_ELAPSED_TIME=$((STATUS_CHECK_END_DATE - STATUS_CHECK_BEGIN_DATE))		
+				STATUS_CHECK_ELAPSED_TIME=$((STATUS_CHECK_END_DATE - STATUS_CHECK_BEGIN_DATE))
 			done
 
 			IS_HEALTHY=$(echo "$STATUS" | grep -c "(healthy)$") 
