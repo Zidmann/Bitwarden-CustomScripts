@@ -116,7 +116,7 @@ LOCK_PATH="${TMP_DIR}/$PREFIX_NAME.lock.pid"
 if [ -f "$LOCK_PATH" ]
 then
 	PIDFILE=$(tail -n1 "$LOCK_PATH" 2>/dev/null)
-	PIDEXISTS=$(ps -aux | awk -F' ' -v v_PID="$PIDFILE" '{if($2==1){print 1}}' | tail -n1)
+	PIDEXISTS=$(ps -aux | awk -F' ' -v v_PID="$PIDFILE" '{if($2==v_PID){print 1}}' | tail -n1)
 	if [ "$PIDEXISTS" != "1" ]
 	then
 		echo "[-] Lock file already exists on an existing PID"
