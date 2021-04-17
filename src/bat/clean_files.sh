@@ -105,6 +105,13 @@ fi
 
 # Loading configuration file
 source "$CONF_PATH"
+RETURN_CODE=$?
+if [ "$RETURN_CODE" != "0" ]
+then
+	echo "[-] Impossible to source the configuration file"
+	exit "$RETURN_CODE"
+fi;
+
 LOG_DIR="$DIRNAME/log"
 TMP_DIR="$DIRNAME/tmp"
 

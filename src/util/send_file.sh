@@ -10,9 +10,14 @@ EXITCODE=0
 
 # Load the common environment variables
 DIRNAME="$(dirname "$(dirname "$(readlink -f "$0")")")"
-source "$DIRNAME/conf/common.env"
 
 echo " [i] Push $FILEPATH file"
+source "$DIRNAME/conf/common.env"
+if [ "$?" != "0" ]
+then
+	echo "[-] Impossible to source the configuration file"
+	exit 1
+fi;
 
 ## Definition of the exit function
 exit_line () {
