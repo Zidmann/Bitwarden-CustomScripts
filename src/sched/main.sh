@@ -115,15 +115,30 @@ mkdir -p "$(dirname "$LOG_PATH")"
 LOCK_PATH="${TMP_DIR}/$PREFIX_NAME.lock.pid"
 if [ -f "$LOCK_PATH" ]
 then
-	echo "[-] Lock file already exists"
-	exit 1
+	PIDFILE=$(tail -n1 "$LOCK_PATH" 2>/dev/null)
+	PIDEXISTS=$(ps -aux | awk -F' ' -v v_PID="$PIDFILE" '{if($2==1){print 1}}' | tail -n1)
+	if [ "$PIDEXISTS" != "1" ]
+	then
+		echo "[-] Lock file already exists on an existing PID"
+		exit 1
+	else
+		echo "[-] Lock file already exists but with an unused PID and will be removed"
+		rm "$LOCK_PATH"
+	fi
 fi
 echo "$$" >> "$LOCK_PATH"
+sleep 2
+PIDFILE=$(tail -n1 "$LOCK_PATH" 2>/dev/null)
+if [ "$PIDFILE" != "$$" ]
+then
+	echo "[-] Concurrent access detected with another instance"
+	exit 1
+fi
+
+EXECUTE_EXIT_FUNCTION=1
 
 # Elapsed time - begin date
 BEGIN_DATE=$(date +%s)
-
-EXECUTE_EXIT_FUNCTION=1
 
 function main_code(){	echo ""
 	echo "======================================================"
