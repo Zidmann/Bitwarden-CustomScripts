@@ -22,6 +22,13 @@ EXECUTE_EXIT_FUNCTION=0
 
 # Trap management
 function exit_function_auxi(){
+	if [ -f "$LOCK_PATH" ]
+	then
+		echo "------------------------------------------------------"
+		echo "[i] Removing the lock file $LOCK_PATH"
+		rm "$LOCK_PATH"
+	fi
+
 	# Elapsed time - end date and length
 	if [ "$BEGIN_DATE" != "" ]
 	then 
@@ -102,6 +109,15 @@ LOG_DIR="$DIRNAME/log"
 # Log file path
 LOG_PATH="${LOG_DIR}/$PREFIX_NAME.$(hostname).$TODAYDATE.$TODAYTIME.log"
 mkdir -p "$(dirname "$LOG_PATH")"
+
+# Lock file path
+LOCK_PATH="${TMP_DIR}/$PREFIX_NAME.lock.pid"
+if [ -f "$LOCK_PATH" ]
+then
+	echo "[-] Lock file already exists"
+	exit 1
+fi
+echo "$$" >> "$LOCK_PATH"
 
 # Elapsed time - begin date
 BEGIN_DATE=$(date +%s)
