@@ -17,15 +17,18 @@ find_word_position() {
 	local WORD="$1"
 	shift
 	local STRING="$*"
+	WORD_SIZE=${#WORD}
 	STRING_SIZE=${#STRING}
 
-	for ((i=1; i<=STRING_SIZE; i++))
+	for ((i=0; i<STRING_SIZE; i++))
 	do
-		SUBSTRING_CHECK=$(echo "$STRING" | cut -c"$i"- | grep -Pc "(^$WORD$|^$WORD )")
-		if [ "$SUBSTRING_CHECK" == "1" ]
+		if [ "${STRING:i:WORD_SIZE}" == "$WORD" ]
 		then
-			echo "$i"
-			break;
+			if [ "${STRING:i+WORD_SIZE:1}" == " " ] || [ "$((i+WORD_SIZE))" == "$STRING_SIZE" ]
+			then
+				echo "$((i+1))"
+				break;
+			fi
 		fi
 	done
 }
