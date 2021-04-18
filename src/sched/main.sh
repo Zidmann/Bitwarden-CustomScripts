@@ -108,7 +108,7 @@ fi;
 LOG_DIR="$DIRNAME/log"
 
 # Log file path
-LOG_PATH="${LOG_DIR}/$PREFIX_NAME.$(hostname).$TODAYDATE.$TODAYTIME.log"
+LOG_PATH="${LOG_DIR}/$PREFIX_NAME.sched.$(hostname).$TODAYDATE.$TODAYTIME.log"
 mkdir -p "$(dirname "$LOG_PATH")"
 
 # Lock file path
