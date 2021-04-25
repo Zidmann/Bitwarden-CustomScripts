@@ -148,7 +148,11 @@ function main_code(){	echo ""
 		else
 			FLAG_CONTAINER=1
  			STATUS=$("$UTIL_DIR/get_docker_info.sh" "STATUS" "$CONTAINER_NAME")
-			IS_UP=$(echo "$STATUS" | grep -c "^Up")
+			IS_UP=0
+			if [ "$STATUS" == "running" ]
+			then
+				IS_UP=1
+			fi
 
 			if [ "$IS_UP" == "1" ]
 			then
@@ -157,10 +161,9 @@ function main_code(){	echo ""
 				STATUS_CHECK_ELAPSED_TIME=0
 				while [ $STATUS_CHECK_ELAPSED_TIME -lt 300 ]
 				do
-					# Checking the status and the health of the container
-					STATUS=$("$UTIL_DIR/get_docker_info.sh" "STATUS" "$CONTAINER_NAME")
-					STARTING_HEALTH=$(echo "$STATUS" | grep -c "(health: starting)$")
-					if [ "$STARTING_HEALTH" == "0" ]
+					# Checking the health of the container
+					HEALTH=$("$UTIL_DIR/get_docker_info.sh" "HEALTH" "$CONTAINER_NAME")
+					if [ "$HEALTH" != "starting" ]
 					then
 						break
 					fi
@@ -170,8 +173,11 @@ function main_code(){	echo ""
 					STATUS_CHECK_ELAPSED_TIME=$((STATUS_CHECK_END_DATE - STATUS_CHECK_BEGIN_DATE))
 				done
 
-				IS_HEALTHY=$(echo "$STATUS" | grep -c "(healthy)$") 
-				if [ "$IS_HEALTHY" == "1" ]
+				if [ "$HEALTH" == "starting" ]
+				then
+					echo "  [-] Container is up and not healthy yet"
+					RETURN_CODE=1
+				elif [ "$HEALTH" == "healthy" ]
 				then
 					echo "  [+] Container is up and healthy"
 				else

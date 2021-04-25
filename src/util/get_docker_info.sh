@@ -4,103 +4,23 @@
 ATTRIBUTE="$1"
 CONTAINERNAME="$2"
 
-IFS='%'
-# Definition of the exit function
-exit_line () {
-	local EXITCODE=$1
-	unset IFS
-	exit "$EXITCODE"
-}
+# Commands
 
-# Definition of the function to find in which position the column is written
-find_word_position() {
-	local WORD="$1"
-	shift
-	local STRING="$*"
-	WORD_SIZE=${#WORD}
-	STRING_SIZE=${#STRING}
+case "$ATTRIBUTE" in
+	"HEALTH")
+		FORMAT="{{.State.Health.Status}}"
+		;;
+	"STATUS")
+		FORMAT="{{.State.Status}}"
+		;;
+	"IMAGE")
+		FORMAT="{{.Config.Image}}"
+		;;
+	*)
+		exit 0
+		;;
+esac
 
-	for ((i=0; i<STRING_SIZE; i++))
-	do
-		if [ "${STRING:i:WORD_SIZE}" == "$WORD" ]
-		then
-			if [ "${STRING:i+WORD_SIZE:1}" == " " ] || [ "$((i+WORD_SIZE))" == "$STRING_SIZE" ]
-			then
-				echo "$((i+1))"
-				break;
-			fi
-		fi
-	done
-}
-
-# String functions
-reverse_string() {
-	local STRING="$*"
-	echo "$STRING" | awk '{ n=split($0,arr,""); for(i=1;i<=n;i++) s=arr[i] s } END{print s}'
-}
-
-remove_first_space(){
-	local STRING="$*"
-	STRING="$(echo $STRING | sed -e 's/^[[:space:]]*//')"
-	echo "$STRING"
-}
-
-trim(){
-	local STRING="$*"
-	STRING=$(remove_first_space "$STRING")
-	STRING=$(reverse_string     "$STRING")
-	STRING=$(remove_first_space "$STRING")
-	STRING=$(reverse_string     "$STRING")
-	echo "$STRING"
-}
-
-# Step 1 : Check if the arguments are not empty
-if [ "$ATTRIBUTE" == "" ] || [ "$CONTAINERNAME" == "" ]
-then
-	exit 1
-fi
-
-# Step 2 : Check if the attribute is in the docker columns list and find its next column
-HAS_COLUMN=0
-NEXT_COLUMN=""
-DOCKER_COLUMNS=("CONTAINER ID" "IMAGE" "COMMAND" "CREATED" "STATUS" "PORTS" "NAMES")
-DOCKER_COLUMNS_COUNT=${#DOCKER_COLUMNS[@]}
-IDX_MAX=$((DOCKER_COLUMNS_COUNT-1))
-for ((COLUMN_IDX=0; COLUMN_IDX<=IDX_MAX; COLUMN_IDX++))
-do
-	if [ "${DOCKER_COLUMNS[$COLUMN_IDX]}" == "$ATTRIBUTE" ]
-	then
-		HAS_COLUMN=1
-		if [ "$COLUMN_IDX" != "$IDX_MAX" ]
-		then
-			NEXT_COLUMN=${DOCKER_COLUMNS[$COLUMN_IDX+1]}
-		fi
-	fi
-done
-if [ "$HAS_COLUMN" != "1" ]
-then
-	exit 2
-fi
-
-# Step 3 : Check if it exists a container with the given name
-DOCKER_PS=$(docker ps -a 2>/dev/null)
-DOCKER_INFO=$(echo "$DOCKER_PS" | awk -v v_CONTAINERNAME="$CONTAINERNAME" -F' ' '{if($NF==v_CONTAINERNAME){print $0}}' | tail -n1)
-if [ "$DOCKER_INFO" == "" ]
-then
-	exit 3
-fi
-
-DOCKER_HEADER=$(echo "$DOCKER_PS" | head -n1)
-
-COLUMN_POS_BEGIN=$(find_word_position "$ATTRIBUTE" "$DOCKER_HEADER")
-if [ "$NEXT_COLUMN" != "" ]
-then
-	COLUMN_POS_END=$(find_word_position "$NEXT_COLUMN" "$DOCKER_HEADER")
-	COLUMN_POS_END=$((COLUMN_POS_END-1))
-fi
-
-VALUE=$(echo "$DOCKER_INFO" | cut -c"$COLUMN_POS_BEGIN"-"$COLUMN_POS_END")
-VALUE=$(trim "$VALUE")
-echo "$VALUE"
+docker inspect --format="$FORMAT" "$CONTAINERNAME"
 exit 0
 

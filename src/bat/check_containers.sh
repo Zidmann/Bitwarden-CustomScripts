@@ -158,8 +158,8 @@ function main_code(){
 			do
 				# Checking the status and the health of the container
 				STATUS=$("$UTIL_DIR/get_docker_info.sh" "STATUS" "$CONTAINER_NAME")
-				STARTING_HEALTH=$(echo "$STATUS" | grep -c "(health: starting)$")
-				if [ "$STARTING_HEALTH" == "0" ]
+				HEALTH=$("$UTIL_DIR/get_docker_info.sh" "HEALTH" "$CONTAINER_NAME")
+				if [ "$HEALTH" != "starting" ]
 				then
 					break
 				fi
@@ -169,8 +169,18 @@ function main_code(){
 				STATUS_CHECK_ELAPSED_TIME=$((STATUS_CHECK_END_DATE - STATUS_CHECK_BEGIN_DATE))
 			done
 
-			IS_HEALTHY=$(echo "$STATUS" | grep -c "(healthy)$") 
-			IS_UP=$(echo "$STATUS" | grep -c "^Up")
+			IS_HEALTHY=0
+			if [ "$HEALTH" == "healthy" ]
+			then
+				IS_HEALTHY=1
+			fi
+
+			IS_UP=0
+			if [ "$STATUS" == "running" ]
+			then
+				IS_UP=1
+			fi
+
 			if [ "$IS_UP" == "1" ] && [ "$IS_HEALTHY" == "1" ]
 			then
 				echo "  [+] Container is up and healthy"
