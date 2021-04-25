@@ -148,13 +148,7 @@ function main_code(){	echo ""
 		else
 			FLAG_CONTAINER=1
  			STATUS=$("$UTIL_DIR/get_docker_info.sh" "STATUS" "$CONTAINER_NAME")
-			IS_UP=0
 			if [ "$STATUS" == "running" ]
-			then
-				IS_UP=1
-			fi
-
-			if [ "$IS_UP" == "1" ]
 			then
 				# Loop to wait the health check initialisation finished and get the status of the container (timeout is set to 5 min)
 				STATUS_CHECK_BEGIN_DATE=$(date +%s)

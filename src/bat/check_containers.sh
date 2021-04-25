@@ -169,26 +169,14 @@ function main_code(){
 				STATUS_CHECK_ELAPSED_TIME=$((STATUS_CHECK_END_DATE - STATUS_CHECK_BEGIN_DATE))
 			done
 
-			IS_HEALTHY=0
-			if [ "$HEALTH" == "healthy" ]
-			then
-				IS_HEALTHY=1
-			fi
-
-			IS_UP=0
-			if [ "$STATUS" == "running" ]
-			then
-				IS_UP=1
-			fi
-
-			if [ "$IS_UP" == "1" ] && [ "$IS_HEALTHY" == "1" ]
+			if [ "$STATUS" == "running" ] && [ "$HEALTH" == "healthy" ]
 			then
 				echo "  [+] Container is up and healthy"
-			elif [ "$IS_UP" != "1" ]
+			elif [ "$STATUS" != "running" ]
 			then
 				echo "  [-] Container is not up"
 				RETURN_CODE=1
-			elif [ "$IS_HEALTHY" != "1" ]
+			elif [ "$HEALTH" != "healthy" ]
 			then
 				echo "  [-] Container is not healthy"
 				RETURN_CODE=1
@@ -206,7 +194,7 @@ function main_code(){
 			fi
 
 			VERSION=$(echo "$IMAGE" | awk -F':' '{print $NF}')
-			if [[ "$IS_UP" == "1"  ||  "$VERSION" != "" ]]
+			if [[ "$STATUS" == "running"  ||  "$VERSION" != "" ]]
 			then
 				if [ "$VERSION" == "$EXPECTED_VERSION" ]
 				then
