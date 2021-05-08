@@ -2,7 +2,7 @@
 
 # Auxiliary script to check if the current user is root
 
-USERID=$EUID
+USERID=$UID
 USER=$(whoami)
 
 ## Definition of the exit function
