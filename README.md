@@ -53,11 +53,12 @@ tar -tvf bitwarden.tar.gz
 ```
 
 ## GCP configuration
-To send backups to the Google Cloud Platform, you have to create a file to the path src/conf/gcp.conf with this content pattern
+To send backups to the Google Cloud Platform, you have to define new environment variables.
+To do it you have to add in the file ~/.bashrc the content below :
 ```bash
-# KEY;DISTANTPATH
-FILEKEY;gs://keybucket
-FILETAR;gs://bitwardenbucket
+BITWARDEN_BACKUP_TAR_BUCKET=gs://bitwardenbucket
+BITWARDEN_BACKUP_KEY_BUCKET=gs://keybucket
+BITWARDEN_BACKUP_SA_PATH=path_to_credential_file
 ```
 
 ## References

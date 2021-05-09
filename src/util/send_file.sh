@@ -12,8 +12,7 @@ EXITCODE=0
 DIRNAME="$(dirname "$(dirname "$(readlink -f "$0")")")"
 
 echo " [i] Push $FILEPATH file"
-source "$DIRNAME/conf/common.env"
-if [ "$?" != "0" ]
+if ! source "$DIRNAME/conf/common.env";
 then
 	echo "[-] Impossible to source the configuration file"
 	exit 1
@@ -25,11 +24,42 @@ exit_line () {
 	exit "$EXITCODE"
 }
 
-## Check if the GCP configuration file exists
-GCP_CONF_FILE="$CONF_DIR/gcp.conf"
-if [ ! -f "$GCP_CONF_FILE" ]
+# Check the argument $KEY
+if [ "$KEY" == "ARCHIVE" ]
 then
-	echo "  [-] No configuration file found"
+	## Check if the GCP bucket dedicated to the archive is defined in the environment variable
+	if [ -z "$BITWARDEN_BACKUP_TAR_BUCKET" ]
+	then
+		echo "  [-] Error no archive backup bucket defined"
+		exit_line 1
+	else
+		DISTANTPATH="$BITWARDEN_BACKUP_TAR_BUCKET"
+	fi
+elif [ "$KEY" == "KEY" ]
+then
+	## Check if the GCP bucket dedicated to the keys is defined in the environment variable
+	if [ -z "$BITWARDEN_BACKUP_KEY_BUCKET" ]
+	then
+		echo "  [-] Error no key backup bucket defined"
+		exit_line 1
+	else
+		DISTANTPATH="$BITWARDEN_BACKUP_KEY_BUCKET"
+	fi
+else
+	echo "  [-] Unknown key argument"
+	exit_line 1
+fi
+
+## Check if the GCP service file path variable exists and if it designed a real file
+if [ -z "$BITWARDEN_BACKUP_SA_PATH" ]
+then
+	echo "  [-] Error no service account path defined"
+	exit_line 1
+fi
+
+if [ ! -f "$BITWARDEN_BACKUP_SA_PATH" ]
+then
+	echo "  [-] No service account key file found"
 	exit_line 1
 fi
 
@@ -40,16 +70,7 @@ then
 	exit_line 1
 fi
 
-## Check if the service account key file exists
-SERVICE_ACCOUNT_KEY_FILE="$CONF_DIR/$SERVICE_ACCOUNT_CREDENTIAL"
-if [ ! -f "$SERVICE_ACCOUNT_KEY_FILE" ]
-then
-	echo "  [-] No service account key file found"
-	exit_line 1
-fi
-
-## Extract the distant bucket storage
-DISTANTPATH=$(awk -F';' -v KEY_V="$KEY" '{if($1==KEY_V){print $2}}' "$GCP_CONF_FILE" 2>/dev/null | tail -n1)
+## Check if the distant path exists
 if [ "$DISTANTPATH" == "" ]
 then
 	echo "  [-] Error no distant path identified for $KEY"
@@ -57,7 +78,7 @@ then
 fi
 
 ## Send the file with gsutil tool
-export GOOGLE_APPLICATION_CREDENTIALS="$SERVICE_ACCOUNT_KEY_FILE"
+export GOOGLE_APPLICATION_CREDENTIALS="$BITWARDEN_BACKUP_SA_PATH"
 echo gsutil cp "$FILEPATH" "$DISTANTPATH"
 RETURN_CODE=$?
 if [ "$RETURN_CODE" != "0" ]
@@ -68,6 +89,7 @@ fi
 
 ## Move the file in the sent files directory
 mv "$FILEPATH" "$SENT_DATA_DIR/"
+RETURN_CODE=$?
 if [ "$RETURN_CODE" != "0" ]
 then
 	echo "  [-] Error in the move of the file to the sent files directory"
