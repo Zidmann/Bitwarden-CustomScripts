@@ -52,6 +52,14 @@ To check the content in an archive :
 tar -tvf bitwarden.tar.gz
 ```
 
+## GCP configuration
+To send backups to the Google Cloud Platform, you have to create a file to the path src/conf/gcp.conf with this content pattern
+```bash
+# KEY;DISTANTPATH
+FILEKEY;gs://keybucket
+FILETAR;gs://bitwardenbucket
+```
+
 ## References
 Before developing this code I looked for other public projects which create Bitwarden backups.
 The one which inspired me the most is https://github.com/jamesonp/Bitwarden-Backup.
