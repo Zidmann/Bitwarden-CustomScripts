@@ -5,11 +5,6 @@ By [Zidmann](mailto:emmanuel.zidel@gmail.com) :bow:
 This project consists in developing some scripts to maintain the security of a device with Bitwarden server by upgrading regularly the system and backuping the data (keys, logs, configurations).
 The backups will be encrypted and sent to a cloud environment in the case the Bitwarden hosting device collapsed without exposing the credentials.
 
-## Source
-Before developing this code I looked for other public projects which create Bitwarden backups.
-The one which inspired me the most is https://github.com/jamesonp/Bitwarden-Backup.
-The project was not forked since I preferred in this case to start from nothing but the Bitwarden-Backup was used like a template.
-
 ## Prerequisites
 * The user managing Bitwarden must be 'bitwarden'
 * The Bitwarden host system must be Debian
@@ -56,4 +51,9 @@ To check the content in an archive :
 ```bash
 tar -tvf bitwarden.tar.gz
 ```
+
+## References
+Before developing this code I looked for other public projects which create Bitwarden backups.
+The one which inspired me the most is https://github.com/jamesonp/Bitwarden-Backup.
+The project was not forked since I preferred in this case to start from nothing but the Bitwarden-Backup was used like a template.
 
