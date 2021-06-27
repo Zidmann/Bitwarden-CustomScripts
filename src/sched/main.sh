@@ -10,13 +10,15 @@
 ##################################################################################
 ## 2021/06/27 - Create the temporary directory with the lock file
 ##              and use the script with the bitwarden user instead of root
+##              and use the credential file defined in BITWARDEN_BACKUP_SA_PATH
+##              global variable
 ##################################################################################
 
 
 ##################################################################################
 # Beginning of the script - definition of the variables
 ##################################################################################
-SCRIPT_VERSION="0.0.3"
+SCRIPT_VERSION="0.0.4"
 
 # Return code
 RETURN_CODE=0
@@ -180,7 +182,7 @@ function main_code(){	echo ""
 		exit "$RETURN_CODE"
 	fi;
 
-	"$UTIL_DIR/file_exists.sh" "$CONF_DIR/$SERVICE_ACCOUNT_CREDENTIAL"
+	"$UTIL_DIR/file_exists.sh" "$BITWARDEN_BACKUP_SA_PATH"
 	RETURN_CODE=$?
 	if [ "$RETURN_CODE" != "0" ]
 	then
