@@ -7,12 +7,15 @@
 ##################################################################################
 ## 2021/03/17 - First release of the script
 ##################################################################################
+## 2021/06/27 - Removing the permission management for the root and bitwarden
+##              users
+##################################################################################
 
 
 ##################################################################################
 # Beginning of the script - definition of the variables
 ##################################################################################
-SCRIPT_VERSION="0.0.1"
+SCRIPT_VERSION="0.0.2"
 
 # Return code
 RETURN_CODE=0
@@ -149,12 +152,6 @@ function main_code(){
 	echo "LOG_PATH=$LOG_PATH"
 
 	echo "----------------------------------------------------------"
-	HOME_DIR=$(awk -F':' '{if ($1=="bitwarden") print $6}' /etc/passwd)
-	echo "[i] Changing the permission of the bitwarden home directory (DIR=$HOME_DIR)"
-	change_permission "bitwarden" "$HOME_DIR"
-	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
-
-	echo "----------------------------------------------------------"
 	SCRIPTPATH="$BW_DIR/bitwarden.sh"
 	echo "[i] Changing the permission of the bitwarden script (PATH=$SCRIPTPATH)"
 	change_permission "bitwarden" "$SCRIPTPATH"
@@ -163,16 +160,6 @@ function main_code(){
 	echo "----------------------------------------------------------"
 	echo "[i] Changing the permission of the bitwarden directory (DIR=$BW_DATA)"
 	change_permission "bitwarden" "$BW_DATA"
-	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
-
-	echo "----------------------------------------------------------"
-	echo "[i] Processing the permission of root directory (DIR=/root)"
-	change_permission "root" "/root"
-	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
-
-	echo "----------------------------------------------------------"
-	echo "[i] Processing the permission of the current script directory (DIR=$DIRNAME)"
-	change_permission "root" "$DIRNAME"
 	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
 
 	exit "$RETURN_CODE"
