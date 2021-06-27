@@ -6,6 +6,7 @@ This project consists in developing some scripts to maintain the security of a d
 The backups will be encrypted and sent to a cloud environment in the case the Bitwarden hosting device collapsed without exposing the credentials.
 
 ## Prerequisites
+* The user which launch the scripts must be 'bitwarden'
 * The user managing Bitwarden must be 'bitwarden'
 * The Bitwarden host system must be Debian
 * The cloud environment must be Google Cloud Platform which supposes that you own an account or at least have access on bucket storage
@@ -17,8 +18,8 @@ The Bitwarden application will be maintained up (and restarted if necessary) wit
 
 Below the crontab configuration :
 ```bash
-0 3 * * * /root/Bitwarden-CustomScripts/src/sched/main.sh >/dev/null 2>&1
-0 */2 * * * /root/Bitwarden-CustomScripts/src/sched/keep_up.sh >/dev/null 2>&1
+0 3 * * * /home/bitwarden/Bitwarden-CustomScripts/src/sched/main.sh >/dev/null 2>&1
+0 */2 * * * /home/bitwarden/Bitwarden-CustomScripts/src/sched/keep_up.sh >/dev/null 2>&1
 ```
 
 ## Dependancies
