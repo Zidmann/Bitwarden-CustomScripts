@@ -8,13 +8,14 @@
 ## 2021/04/05 - First release of the script
 ##################################################################################
 ## 2021/06/27 - Create the temporary directory with the lock file
+##              and use the script with the bitwarden user instead of root
 ##################################################################################
 
 
 ##################################################################################
 # Beginning of the script - definition of the variables
 ##################################################################################
-SCRIPT_VERSION="0.0.2"
+SCRIPT_VERSION="0.0.3"
 
 # Return code
 RETURN_CODE=0
@@ -155,7 +156,7 @@ function main_code(){	echo ""
 	echo "LOG_PATH=$LOG_PATH"
 
 	# Step 1 : Check if the user is root to have all the privileges
-	"$UTIL_DIR/user_root.sh"
+	"$UTIL_DIR/user_bitwarden.sh"
 	RETURN_CODE=$?
 	if [ "$RETURN_CODE" != "0" ]
 	then

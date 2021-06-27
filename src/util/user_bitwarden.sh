@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Auxiliary script to check if the current user is root
+# Auxiliary script to check if the current user is bitwarden
 
 USERID=$UID
 USER=$(whoami)
@@ -15,16 +15,16 @@ echo "----------------------------------"
 echo " PRIVILEGE USER CHECK             "
 echo "----------------------------------"
 
-if [ "$USERID" == "0" ]
+if [ "$USER" == "bitwarden" ]
 then
-	echo "[+] User is root"
+	echo "[+] User is bitwarden (ID=$USERID)"
 	exit_line 0
-elif [ "$USERID" == "" ]
+elif [ "$USER" == "" ]
 then
 	echo "[-] User is not identified"
 	exit_line 2
 else
-	echo "[-] User $USER(ID=$USERID) is not root"
+	echo "[-] User $USER(ID=$USERID) is not bitwarden"
 	exit_line 1
 fi
 
