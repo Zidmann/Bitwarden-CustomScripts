@@ -7,12 +7,14 @@
 ##################################################################################
 ## 2021/04/05 - First release of the script
 ##################################################################################
+## 2021/06/27 - Create the temporary directory with the lock file
+##################################################################################
 
 
 ##################################################################################
 # Beginning of the script - definition of the variables
 ##################################################################################
-SCRIPT_VERSION="0.0.1"
+SCRIPT_VERSION="0.0.2"
 
 # Return code
 RETURN_CODE=0
@@ -112,6 +114,7 @@ mkdir -p "$(dirname "$LOG_PATH")"
 
 # Lock file path
 LOCK_PATH="${TMP_DIR}/$PREFIX_NAME.lock.pid"
+mkdir -p "$(dirname "$LOCK_PATH")"
 if [ -f "$LOCK_PATH" ]
 then
 	PIDFILE=$(tail -n1 "$LOCK_PATH" 2>/dev/null)
