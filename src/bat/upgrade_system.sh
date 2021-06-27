@@ -130,9 +130,9 @@ function main_code(){
 
 	echo "----------------------------------------------------------"
 	echo "[i] Upgrade the Bitwarden application using bitwarden user"
-	su - bitwarden -c "$BW_DIR/bitwarden.sh updateself"
+	"$BW_DIR/bitwarden.sh" updateself
 	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
-	su - bitwarden -c "$BW_DIR/bitwarden.sh update"
+	"$BW_DIR/bitwarden.sh" update
 	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
 
 	echo "----------------------------------------------------------"
