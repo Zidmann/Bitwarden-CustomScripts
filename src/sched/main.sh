@@ -102,6 +102,15 @@ else
 	exit "$RETURN_CODE"
 fi
 
+# Loading the global environment variable
+. ~/.bashrc
+RETURN_CODE=$?
+if [ "$RETURN_CODE" != "0" ]
+then
+	echo "[-] Impossible to load the bashrc configuration file"
+	exit "$RETURN_CODE"
+fi;
+
 # Loading configuration file
 source "$CONF_PATH"
 RETURN_CODE=$?
