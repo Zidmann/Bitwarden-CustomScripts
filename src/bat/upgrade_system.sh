@@ -137,7 +137,7 @@ function main_code(){
 
 	echo "----------------------------------------------------------"
 	echo "[i] Reboot the Bitwarden application using bitwarden user"
-	su - bitwarden -c "$BW_DIR/bitwarden.sh restart"
+	"$BW_DIR/bitwarden.sh" restart
 	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
 
 	exit "$RETURN_CODE"

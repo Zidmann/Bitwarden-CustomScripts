@@ -200,7 +200,7 @@ function main_code(){	echo ""
 		echo " [-] Something was wrong with Bitwarden containers, a restart will be operated"
 		echo " -----------------------------------------------------"
 		echo " [i] Reboot the Bitwarden application using bitwarden user"
-		su - bitwarden -c "$BW_DIR/bitwarden.sh restart"
+		"$BW_DIR/bitwarden.sh" restart
 		RETURN_CODE=$?
 	fi
 
