@@ -27,7 +27,7 @@ Below the crontab configuration :
 
 ## Directories
 * src/ contains the Linux source which must be deployed on the Bitwarden hosting machine
-* gcp/ contains the Terraform script to use on Google Cloud Platform
+* cloud/ contains the Terraform script to use on Google Cloud Platform
 
 ## Encryption
 Bitwarden uses AES-CBC 256-bit encryption for the encrypted passwords, and PBKDF2 SHA-256 to derive your encryption key.
@@ -53,7 +53,44 @@ To check the content in an archive :
 tar -tvf bitwarden.tar.gz
 ```
 
-## GCP configuration
+## GCP cloud setup
+
+Set the environment variables (choose a unique PROJECT_ID)
+```
+PROJECT_ID=my-project-id
+SERVICE_ACCOUNT=bitwarden-terraform-deployer
+```
+
+Authenticate
+```
+gcloud auth login
+```
+
+Create the GCP project where to store the backups
+```
+gcloud projects create $PROJECT_ID
+```
+
+Define service account dedicated to the Terraform script to build the different components
+```
+gcloud iam service-accounts create $SERVICE_ACCOUNT --project $PROJECT_ID
+```
+
+Create Service Account keys
+```
+gcloud iam service-accounts keys create tf/sa.json --iam-account $SERVICE_ACCOUNT@$PROJECT_ID.iam.gserviceaccount.com --project $PROJECT_ID
+```
+
+Grant admin roles (Storage/PubSub/CloudScheduler/CloudFunction/BigQuery) to the service account
+```
+gcloud projects add-iam-policy-binding $PROJECT_ID --member=serviceAccount:$SERVICE_ACCOUNT@$PROJECT_ID.iam.gserviceaccount.com --role=roles/storage.admin --project $PROJECT_ID
+gcloud projects add-iam-policy-binding $PROJECT_ID --member=serviceAccount:$SERVICE_ACCOUNT@$PROJECT_ID.iam.gserviceaccount.com --role=roles/pubsub.admin --project $PROJECT_ID
+gcloud projects add-iam-policy-binding $PROJECT_ID --member=serviceAccount:$SERVICE_ACCOUNT@$PROJECT_ID.iam.gserviceaccount.com --role=roles/cloudscheduler.admin --project $PROJECT_ID
+gcloud projects add-iam-policy-binding $PROJECT_ID --member=serviceAccount:$SERVICE_ACCOUNT@$PROJECT_ID.iam.gserviceaccount.com --role=roles/cloudfunctions.admin --project $PROJECT_ID
+gcloud projects add-iam-policy-binding $PROJECT_ID --member=serviceAccount:$SERVICE_ACCOUNT@$PROJECT_ID.iam.gserviceaccount.com --role=roles/roles/bigquery.admin --project $PROJECT_ID
+```
+
+## GCP cloud configuration
 To send backups to the Google Cloud Platform, you have to define new environment variables.
 To do it you have to add in the file ~/.bashrc the content below :
 ```bash
