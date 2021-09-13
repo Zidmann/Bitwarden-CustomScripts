@@ -58,7 +58,7 @@ tar -tvf bitwarden.tar.gz
 Set the environment variables (choose a unique PROJECT_ID)
 ```
 PROJECT_ID=my-project-id
-SERVICE_ACCOUNT=bitwarden-terraform-deployer
+SERVICE_ACCOUNT=terraform-deployer
 ```
 
 Authenticate
