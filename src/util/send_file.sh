@@ -79,7 +79,7 @@ fi
 
 ## Send the file with gsutil tool
 export GOOGLE_APPLICATION_CREDENTIALS="$BITWARDEN_BACKUP_SA_PATH"
-echo gsutil cp "$FILEPATH" "$DISTANTPATH"
+gsutil cp "$FILEPATH" "$DISTANTPATH"
 RETURN_CODE=$?
 if [ "$RETURN_CODE" != "0" ]
 then
