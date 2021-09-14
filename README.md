@@ -53,6 +53,9 @@ To check the content in an archive :
 tar -tvf bitwarden.tar.gz
 ```
 
+## Install gsutil
+All information are in this link <https://cloud.google.com/storage/docs/gsutil_install>
+
 ## GCP cloud setup
 
 Set the environment variables (choose a unique PROJECT_ID)
@@ -87,7 +90,7 @@ gcloud projects add-iam-policy-binding $PROJECT_ID --member=serviceAccount:$SERV
 gcloud projects add-iam-policy-binding $PROJECT_ID --member=serviceAccount:$SERVICE_ACCOUNT@$PROJECT_ID.iam.gserviceaccount.com --role=roles/pubsub.admin --project $PROJECT_ID
 gcloud projects add-iam-policy-binding $PROJECT_ID --member=serviceAccount:$SERVICE_ACCOUNT@$PROJECT_ID.iam.gserviceaccount.com --role=roles/cloudscheduler.admin --project $PROJECT_ID
 gcloud projects add-iam-policy-binding $PROJECT_ID --member=serviceAccount:$SERVICE_ACCOUNT@$PROJECT_ID.iam.gserviceaccount.com --role=roles/cloudfunctions.admin --project $PROJECT_ID
-gcloud projects add-iam-policy-binding $PROJECT_ID --member=serviceAccount:$SERVICE_ACCOUNT@$PROJECT_ID.iam.gserviceaccount.com --role=roles/roles/bigquery.admin --project $PROJECT_ID
+gcloud projects add-iam-policy-binding $PROJECT_ID --member=serviceAccount:$SERVICE_ACCOUNT@$PROJECT_ID.iam.gserviceaccount.com --role=roles/bigquery.admin --project $PROJECT_ID
 ```
 
 ## GCP cloud configuration
@@ -97,6 +100,11 @@ To do it you have to add in the file ~/.bashrc the content below :
 BITWARDEN_BACKUP_TAR_BUCKET=gs://bitwardenbucket
 BITWARDEN_BACKUP_KEY_BUCKET=gs://keybucket
 BITWARDEN_BACKUP_SA_PATH=path_to_credential_file
+```
+
+The gsutil command which is used in the script push_data.sh to send the files to the storage is initiate by this line :
+```bash
+gcloud auth activate-service-account --key-file <BITWARDEN_BACKUP_SA_PATH>
 ```
 
 ## References
