@@ -131,15 +131,29 @@ function main_code(){
 
 	echo "----------------------------------------------------------"
 	echo "[i] Sending the files in the data directory"
-	echo "----------------------------------------------------------"
-	echo " [i] Sending the encrypted archive files"
-	find "$DATA_DIR" -maxdepth 1 -name "$ENCRYPTED_ARCHIVE_FILEPATTERN" -type f -exec "$UTIL_DIR/send_file.sh" "ARCHIVE" {} \;
-	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
+
+	if ! source "$HOME/.bashrc";
+	then
+		echo "[-] Impossible to source the bashrc file"
+		exit 1
+	fi;
 
 	echo "----------------------------------------------------------"
-	echo " [i] Sending the encrypted key files"
-	find "$DATA_DIR" -maxdepth 1 -name "$ENCRYPTED_AES_KEY_FILEPATTERN" -type f -exec "$UTIL_DIR/send_file.sh" "KEY" {} \;
+	echo " [i] Configuring the service account for gloud"
+	gcloud auth activate-service-account --key-file "$BITWARDEN_BACKUP_SA_PATH"
 	RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
+
+	if [ "$RETURN_CODE" == "0" ]
+	then
+		echo " [i] Sending the encrypted archive files"
+		find "$DATA_DIR" -maxdepth 1 -name "$ENCRYPTED_ARCHIVE_FILEPATTERN" -type f -exec "$UTIL_DIR/send_file.sh" "ARCHIVE" {} \;
+		RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
+
+		echo "----------------------------------------------------------"
+		echo " [i] Sending the encrypted key files"
+		find "$DATA_DIR" -maxdepth 1 -name "$ENCRYPTED_AES_KEY_FILEPATTERN" -type f -exec "$UTIL_DIR/send_file.sh" "KEY" {} \;
+		RETURN_CODE=$([ $? == 0 ] && echo "$RETURN_CODE" || echo "1")
+	fi
 
 	exit "$RETURN_CODE"
 }

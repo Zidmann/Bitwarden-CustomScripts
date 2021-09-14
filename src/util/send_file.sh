@@ -18,6 +18,12 @@ then
 	exit 1
 fi;
 
+if ! source "$HOME/.bashrc";
+then
+	echo "[-] Impossible to source the bashrc file"
+	exit 1
+fi;
+
 ## Definition of the exit function
 exit_line () {
 	local EXITCODE=$1
@@ -78,7 +84,6 @@ then
 fi
 
 ## Send the file with gsutil tool
-export GOOGLE_APPLICATION_CREDENTIALS="$BITWARDEN_BACKUP_SA_PATH"
 gsutil cp "$FILEPATH" "$DISTANTPATH"
 RETURN_CODE=$?
 if [ "$RETURN_CODE" != "0" ]
